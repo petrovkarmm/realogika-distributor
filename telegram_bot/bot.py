@@ -6,14 +6,16 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 from aiogram_dialog import setup_dialogs
 
-from routers.ref_code_no_roles_router.ref_code_no_roles_router import ref_code_no_roles_router
-from routers.start_command_router.start_command_router import start_command_router
+from routers.ref_code_no_roles.ref_code_no_roles_router import ref_code_no_roles_router
+from routers.start_command.start_command_router import start_command_router
 
-# from dotenv import load_dotenv, find_dotenv
-#
-# load_dotenv(find_dotenv())
-#
-# token = os.getenv('token')
+from dotenv import load_dotenv, find_dotenv
+
+from telegram_bot.routers.ref_program.ref_program_router import ref_program_router
+
+load_dotenv(find_dotenv())
+
+token = os.getenv('token')
 
 BASE_DIR = os.curdir
 
@@ -40,11 +42,24 @@ async def main():
 
     dp.include_router(start_command_router)
     dp.include_router(ref_code_no_roles_router)
+    dp.include_router(ref_program_router)
 
-    @dp.message(F.text == 'test')
-    async def tested_handler(message: Message, state: FSMContext):
+    @dp.message(F.document)
+    async def get_file_id(message: Message, state: FSMContext):
         await message.answer(
-            text='All good!!'
+            text=str(message.document.file_id)
+        )
+
+    @dp.message(F.photo)
+    async def get_file_id(message: Message, state: FSMContext):
+        await message.answer(
+            text=str(message.photo[0].file_id)
+        )
+
+    @dp.message(F.audio)
+    async def get_file_id(message: Message, state: FSMContext):
+        await message.answer(
+            text=str(message.audio.file_id)
         )
 
     await bot.delete_webhook(
