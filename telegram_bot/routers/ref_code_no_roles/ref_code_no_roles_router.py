@@ -3,9 +3,21 @@ from aiogram.filters import StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
-from telegram_bot.routers.start_command_router.keyboards import ref_code_no_roles_keyboard
+from telegram_bot.routers.ref_code_no_roles.keyboards import ref_program_menu_keyboards
+from telegram_bot.routers.start_command.keyboards import ref_code_no_roles_keyboard
 
 ref_code_no_roles_router = Router()
+
+
+@ref_code_no_roles_router.message(StateFilter('ref_code_no_roles'), F.text == 'Реф. программа')
+async def go_to_ref_program_router(message: Message, state: FSMContext):
+    await message.answer(
+        text='Кнопка реф. программа',
+        reply_markup=ref_program_menu_keyboards()
+    )
+    await state.set_state(
+        'ref_program_menu'
+    )
 
 
 @ref_code_no_roles_router.message(StateFilter('ref_code_no_roles'), F.text == 'Магазин')

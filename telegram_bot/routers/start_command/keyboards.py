@@ -4,6 +4,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder
 def ref_code_no_roles_keyboard():
     keyboard_builder = ReplyKeyboardBuilder()
     keyboard_builder.button(text='Магазин')
+    keyboard_builder.button(text='Реф. программа')
 
     keyboard_builder.adjust(1)
 

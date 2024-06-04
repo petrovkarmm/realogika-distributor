@@ -3,7 +3,7 @@ from aiogram.filters import Command, StateFilter, CommandObject
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
-from telegram_bot.routers.start_command_router.keyboards import ref_code_no_roles_keyboard
+from telegram_bot.routers.start_command.keyboards import ref_code_no_roles_keyboard
 
 start_command_router = Router()
 
