@@ -3,7 +3,7 @@ from aiogram.filters import Command, StateFilter, CommandObject
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
-from telegram_bot.routers.start_command.keyboards import ref_code_no_roles_keyboard
+from telegram_bot.routers.start_command.keyboards import ref_code_no_roles_keyboard, ref_code_keyboard
 
 start_command_router = Router()
 
@@ -17,10 +17,14 @@ async def getting_start_with_new_users(message: Message, state: FSMContext, comm
             text='Проверка ссылки'
         )
         # В данном месте проводим проверку промокода
-        request = 'реф промокод + нет роли'
+        request = 'реф промокод'
         if request == 'реф промокод':
+            await state.set_state(
+                'ref_program_menu'
+            )
             await message.answer(
-                text='Переход по реферальному промо'
+                text='Переход по реферальному промо',
+                reply_markup=ref_code_keyboard()
             )
         elif request == 'реф промокод + нет роли':
             await message.answer(
