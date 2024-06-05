@@ -11,6 +11,7 @@ from routers.start_command.start_command_router import start_command_router
 
 from dotenv import load_dotenv, find_dotenv
 
+from telegram_bot.routers.ref_program.balance_dialog.balance_dialog_router import balance_dialog_router
 from telegram_bot.routers.ref_program.ref_program_router import ref_program_router
 
 load_dotenv(find_dotenv())
@@ -40,6 +41,7 @@ async def main():
 
     setup_dialogs(dp)
 
+    dp.include_router(balance_dialog_router)
     dp.include_router(start_command_router)
     dp.include_router(ref_code_no_roles_router)
     dp.include_router(ref_program_router)
