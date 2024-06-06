@@ -1,3 +1,4 @@
+from pprint import pprint
 from typing import Any
 
 from aiogram import F
@@ -25,6 +26,17 @@ async def close_dialog(callback: CallbackQuery,
 def balance_movement_id_getter(balance_movement: BalanceMovement) -> int:
     return balance_movement.id
 
+
+async def quit_from_balance(
+        cq: CallbackQuery,
+        button: Button,
+        dialog_manager: DialogManager
+):
+    """
+    Добавить выход общий для всех + выкидывать в меню.
+    Нужно вытащить state и выдать сообщение + клову ref_program_kb
+    """
+    pass
 
 async def on_balance_movement_selected(
         callback: CallbackQuery,
@@ -147,7 +159,7 @@ balance_movement_detail_window = Window(
         text=Const("Назад"), id="back", on_click=Back()
     ),
     Button(
-        text=Const("Выйти"), id="back_to_menu", on_click=None
+        text=Const("Выйти"), id="back_to_menu", on_click=quit_from_balance
     ),
     state=BalanceDialog.balance_movement_detail
 )
