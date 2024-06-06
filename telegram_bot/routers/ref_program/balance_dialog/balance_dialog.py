@@ -8,6 +8,8 @@ from aiogram_dialog.widgets.text import Const, Format
 
 from telegram_bot.routers.ref_program.balance_dialog.balance_dataclass import BalanceMovement, BALANCE_KEY
 from telegram_bot.routers.ref_program.balance_dialog.balance_dialog_states import BalanceDialog
+from telegram_bot.routers.ref_program.balance_dialog.data_for_tests import test_user_balance_movement_data, \
+    test_full_balance_movement_info
 
 
 async def close_dialog(callback: CallbackQuery,
@@ -30,8 +32,14 @@ async def on_balance_movement_selected(
         dialog_manager: DialogManager,
         balance_movement_id: int,
 ):
-    await callback.answer(
-        text=str(balance_movement_id)
+    user_balance_movement_detail = test_full_balance_movement_info[int(balance_movement_id)]
+    dialog_manager.dialog_data['amount'] = user_balance_movement_detail['amount']
+    dialog_manager.dialog_data['is_accrual'] = user_balance_movement_detail['is_accrual']
+    dialog_manager.dialog_data['date'] = user_balance_movement_detail['date']
+    dialog_manager.dialog_data['info'] = user_balance_movement_detail['info']
+
+    await dialog_manager.switch_to(
+        BalanceDialog.balance_movement_detail
     )
 
 
@@ -42,41 +50,13 @@ async def user_balance_movement_getter(**_kwargs):
     dialog_manager.dialog_data['all_replenishments'] = 100000
     dialog_manager.dialog_data['all_write_offs'] = 20000
 
-    test_data = [
-        {
-            'id': 1,
-            'amount': 100,
-            'is_accrual': True
-        },
-        {
-            'id': 2,
-            'amount': 12,
-            'is_accrual': False
-        },
-        {
-            'id': 3,
-            'amount': 220,
-            'is_accrual': True
-        },
-        {
-            'id': 4,
-            'amount': 4000,
-            'is_accrual': False
-        },
-        {
-            'id': 5,
-            'amount': 56,
-            'is_accrual': True
-        },
-    ]
-
     return {
         BALANCE_KEY:
             [
                 BalanceMovement(balance_movement['id'],
                                 BalanceMovement.format_amount(balance_movement['amount'],
                                                               balance_movement['is_accrual']))
-                for balance_movement in test_data
+                for balance_movement in test_user_balance_movement_data
             ]
     }
 
@@ -112,7 +92,7 @@ async def user_balance_movement_getter(**_kwargs):
 # dialog_manager.dialog_data['all_replenishments'] = 100000
 # dialog_manager.dialog_data['all_write_offs'] = 20000
 
-balance_menu = Window(
+balance_menu_window = Window(
     Const(
         "У вас отсутствую движения по балансу.",
         when=~F['dialog_data']
@@ -144,7 +124,34 @@ balance_menu = Window(
     getter=user_balance_movement_getter,
     state=BalanceDialog.balance_dialog_menu
 )
+#
+# dialog_manager.dialog_data['amount'] = user_balance_movement_detail['amount']
+# dialog_manager.dialog_data['is_accrual'] = user_balance_movement_detail['is_accrual']
+# dialog_manager.dialog_data['date'] = user_balance_movement_detail['date']
+# dialog_manager.dialog_data['info'] = user_balance_movement_detail['info']
+
+balance_movement_detail_window = Window(
+    Const(
+        "У вас отсутствую движения по балансу.",
+        when=~F['dialog_data']
+    ),
+    Format(
+        "Сумма передвижения: {dialog_data[amount]}"
+        "\nПополнение: {dialog_data[is_accrual]}"
+        "\nДата списания: {dialog_data[date]}"
+        "\nИнформация: {dialog_data[info]}",
+        when=F['dialog_data']
+    ),
+    Button(
+        text=Const("Назад"), id="back", on_click=None
+    ),
+    Button(
+        text=Const("Выйти"), id="back_to_menu", on_click=None
+    ),
+    state=BalanceDialog.balance_movement_detail
+)
 
 balance_dialog = Dialog(
-    balance_menu
+    balance_menu_window,
+    balance_movement_detail_window
 )
