@@ -1,4 +1,4 @@
-from aiogram import Router, F
+from aiogram import Router, F, types
 from aiogram.filters import StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
@@ -17,13 +17,14 @@ async def open_balance_dialog_handler(message: Message, state: FSMContext, dialo
     :param state:
     :return:
     """
-    dialog_start_data = {
 
-    }
+    await message.answer(
+        text='Выберите интересующее пополнение/списание:',
+        reply_markup=types.ReplyKeyboardRemove()
+    )
 
     await dialog_manager.start(
-        state=BalanceDialog.balance_dialog_menu,
-        data=dialog_start_data
+        state=BalanceDialog.balance_dialog_menu
     )
 
 
