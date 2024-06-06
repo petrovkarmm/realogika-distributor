@@ -64,6 +64,12 @@ async def main():
             text=str(message.audio.file_id)
         )
 
+    @dp.message(F.text == 'ping')
+    async def test_handler_on_ping(message: Message, state: FSMContext):
+        await message.answer(
+            text='PONG'
+        )
+
     await bot.delete_webhook(
         drop_pending_updates=True
     )
