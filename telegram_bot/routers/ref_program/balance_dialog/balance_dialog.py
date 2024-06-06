@@ -3,7 +3,7 @@ from typing import Any
 from aiogram import F
 from aiogram.types import CallbackQuery
 from aiogram_dialog import Dialog, Window, DialogManager
-from aiogram_dialog.widgets.kbd import SwitchTo, Row, Button, ScrollingGroup, Column, Select
+from aiogram_dialog.widgets.kbd import SwitchTo, Row, Button, ScrollingGroup, Column, Select, Back
 from aiogram_dialog.widgets.text import Const, Format
 
 from telegram_bot.routers.ref_program.balance_dialog.balance_dataclass import BalanceMovement, BALANCE_KEY
@@ -131,19 +131,20 @@ balance_menu_window = Window(
 # dialog_manager.dialog_data['info'] = user_balance_movement_detail['info']
 
 balance_movement_detail_window = Window(
-    Const(
-        "У вас отсутствую движения по балансу.",
-        when=~F['dialog_data']
+    Format(
+        "Сумма пополнения:  +{dialog_data[amount]}руб."
+        "\nДата пополнения: {dialog_data[date]}"
+        "\nИнформация: {dialog_data[info]}",
+        when=F['dialog_data']['is_accrual']
     ),
     Format(
-        "Сумма передвижения: {dialog_data[amount]}"
-        "\nПополнение: {dialog_data[is_accrual]}"
+        "Сумма списания:  -{dialog_data[amount]}руб."
         "\nДата списания: {dialog_data[date]}"
         "\nИнформация: {dialog_data[info]}",
-        when=F['dialog_data']
+        when=~F['dialog_data']['is_accrual']
     ),
     Button(
-        text=Const("Назад"), id="back", on_click=None
+        text=Const("Назад"), id="back", on_click=Back()
     ),
     Button(
         text=Const("Выйти"), id="back_to_menu", on_click=None
