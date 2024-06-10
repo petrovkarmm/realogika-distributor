@@ -5,6 +5,7 @@ from aiogram import Bot, Dispatcher, F
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 from aiogram_dialog import setup_dialogs
+from aiohttp import web
 
 from routers.ref_code_no_roles.ref_code_no_roles_router import ref_code_no_roles_router
 from routers.start_command.start_command_router import start_command_router
@@ -21,7 +22,7 @@ token = os.getenv('token')
 BASE_DIR = os.curdir
 
 
-async def main():
+async def bot_start():
     # logging.basicConfig(
     #     level=logging.INFO,
     #     format="%(asctime)s - [%(levelname)s] -  %(name)s - (%(filename)s).%(funcName)s(%(lineno)d) - %(message)s",
@@ -76,5 +77,15 @@ async def main():
     await dp.start_polling(bot)
 
 
+async def webserver_start():
+    app = web.Application()
+    runner = web.AppRunner(app)
+    await runner.setup()
+    site = web.TCPSite(runner, "127.0.0.1", 5555)
+    await site.start()
+
 if __name__ == '__main__':
-    asyncio.run(main())
+    loop = asyncio.get_event_loop()
+    task_1 = loop.create_task(bot_start())
+    task_2 = loop.create_task(webserver_start())
+    loop.run_until_complete(asyncio.gather(task_1, task_2))
