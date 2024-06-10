@@ -2,6 +2,7 @@ from pprint import pprint
 from typing import Any
 
 from aiogram import F
+from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery
 from aiogram_dialog import Dialog, Window, DialogManager
 from aiogram_dialog.widgets.kbd import SwitchTo, Row, Button, ScrollingGroup, Column, Select, Back
@@ -32,11 +33,17 @@ async def quit_from_balance(
         button: Button,
         dialog_manager: DialogManager
 ):
+    context = dialog_manager.current_context()
+    print(context)
+    state = context.state
+
+
     """
     Добавить выход общий для всех + выкидывать в меню.
     Нужно вытащить state и выдать сообщение + клову ref_program_kb
     """
     pass
+
 
 async def on_balance_movement_selected(
         callback: CallbackQuery,
