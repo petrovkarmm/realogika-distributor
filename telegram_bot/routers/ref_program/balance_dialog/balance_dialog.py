@@ -12,6 +12,7 @@ from telegram_bot.routers.ref_program.balance_dialog.balance_dataclass import Ba
 from telegram_bot.routers.ref_program.balance_dialog.balance_dialog_states import BalanceDialog
 from telegram_bot.routers.ref_program.balance_dialog.data_for_tests import test_user_balance_movement_data, \
     test_full_balance_movement_info
+from telegram_bot.routers.start_command.keyboards import ref_code_keyboard
 
 
 async def close_dialog(callback: CallbackQuery,
@@ -33,16 +34,19 @@ async def quit_from_balance(
         button: Button,
         dialog_manager: DialogManager
 ):
-    context = dialog_manager.current_context()
-    print(context)
-    state = context.state
+    middleware_data = dialog_manager.middleware_data
+    state = middleware_data['state']
+    state: FSMContext
 
+    await dialog_manager.done()
 
-    """
-    Добавить выход общий для всех + выкидывать в меню.
-    Нужно вытащить state и выдать сообщение + клову ref_program_kb
-    """
-    pass
+    await state.set_state(
+        'ref_program_menu'
+    )
+    await cq.message.answer(
+        text='Выберите действие:',
+        reply_markup=ref_code_keyboard()
+    )
 
 
 async def on_balance_movement_selected(
@@ -138,16 +142,11 @@ balance_menu_window = Window(
         when=F['dialog_data']
     ),
     Button(
-        text=Const("Выйти"), id="back_to_menu", on_click=None
+        text=Const("Выйти"), id="back_to_menu", on_click=quit_from_balance
     ),
     getter=user_balance_movement_getter,
     state=BalanceDialog.balance_dialog_menu
 )
-#
-# dialog_manager.dialog_data['amount'] = user_balance_movement_detail['amount']
-# dialog_manager.dialog_data['is_accrual'] = user_balance_movement_detail['is_accrual']
-# dialog_manager.dialog_data['date'] = user_balance_movement_detail['date']
-# dialog_manager.dialog_data['info'] = user_balance_movement_detail['info']
 
 balance_movement_detail_window = Window(
     Format(
