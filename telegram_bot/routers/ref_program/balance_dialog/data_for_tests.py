@@ -28,8 +28,8 @@ test_full_balance_movement_info = {
         'info': 'Выставленный счёт от компании.'
     },
     3: {
-        'amount': 100,
-        'is_accrual': True,
+        'amount': 12,
+        'is_accrual': False,
         'date': '26.06.2024',
         'info': 'Банковская карта.'
     },
