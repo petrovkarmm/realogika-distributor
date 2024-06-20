@@ -76,16 +76,10 @@ async def bot_start():
     )
     await dp.start_polling(bot)
 
-
-async def webserver_start():
-    app = web.Application()
-    runner = web.AppRunner(app)
-    await runner.setup()
-    site = web.TCPSite(runner, "127.0.0.1", 5555)
-    await site.start()
-
 if __name__ == '__main__':
-    loop = asyncio.get_event_loop()
-    task_1 = loop.create_task(bot_start())
-    task_2 = loop.create_task(webserver_start())
-    loop.run_until_complete(asyncio.gather(task_1, task_2))
+    try:
+        asyncio.run(bot_start())
+    except Exception as e:
+        print(e)
+    else:
+        print('bot starting.')
