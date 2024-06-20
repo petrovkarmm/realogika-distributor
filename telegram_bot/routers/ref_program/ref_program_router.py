@@ -5,6 +5,7 @@ from aiogram.types import Message
 from aiogram_dialog import DialogManager
 
 from telegram_bot.routers.ref_program.balance_dialog.balance_dialog_states import BalanceDialog
+from telegram_bot.routers.start_command.keyboards import ref_code_keyboard
 
 ref_program_router = Router()
 
@@ -37,4 +38,13 @@ async def open_my_arch_handler(message: Message, state: FSMContext):
 async def open_my_ref_link(message: Message, state: FSMContext):
     await message.answer(
         text='Ваша ссылка: {bot_link}'
+    )
+
+
+@ref_program_router.message(StateFilter('ref_program_menu'), F.text)
+async def answer_on_spam_handler(message: Message, state: FSMContext):
+    await message.answer(
+        text='Неизвестная команда.\n\n'
+             'Выберите действие:',
+        reply_markup=ref_code_keyboard()
     )
