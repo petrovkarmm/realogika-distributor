@@ -6,7 +6,7 @@ def ref_code_no_roles_keyboard():
     keyboard_builder.button(text='Магазин')
     keyboard_builder.button(text='Реф. программа')
 
-    keyboard_builder.adjust(1)
+    keyboard_builder.adjust(2)
 
     return keyboard_builder.as_markup(
         resize_keyboard=True,
@@ -20,7 +20,7 @@ def ref_code_keyboard():
     keyboard_builder.button(text='Реф. программа')
     keyboard_builder.button(text='Баланс')
 
-    keyboard_builder.adjust(1)
+    keyboard_builder.adjust(2)
 
     return keyboard_builder.as_markup(
         resize_keyboard=True,
