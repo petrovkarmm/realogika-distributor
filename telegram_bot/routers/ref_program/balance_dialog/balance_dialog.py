@@ -1,16 +1,15 @@
-from pprint import pprint
 from typing import Any
 
 from aiogram import F
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery
 from aiogram_dialog import Dialog, Window, DialogManager
-from aiogram_dialog.widgets.kbd import SwitchTo, Row, Button, ScrollingGroup, Column, Select, Back
+from aiogram_dialog.widgets.kbd import Button, ScrollingGroup, Column, Select, Back
 from aiogram_dialog.widgets.text import Const, Format
 
 from telegram_bot.routers.ref_program.balance_dialog.balance_dataclass import BalanceMovement, BALANCE_KEY
 from telegram_bot.routers.ref_program.balance_dialog.balance_dialog_states import BalanceDialog
-from telegram_bot.routers.ref_program.balance_dialog.data_for_tests import test_user_balance_movement_data, \
+from data_for_tests import test_user_balance_movement_data, \
     test_full_balance_movement_info
 from telegram_bot.routers.start_command.keyboards import ref_code_keyboard
 
