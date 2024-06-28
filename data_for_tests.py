@@ -34,3 +34,24 @@ test_full_balance_movement_info = {
         'info': 'Банковская карта.'
     },
 }
+
+shop_main_page_data_test = {
+    1: {
+        'count': 100000,
+        'name': 'Доступ к админке',
+        'price': 30000,
+        'description': 'Статус админа'
+    },
+    2: {
+        'count': 15,
+        'name': 'Книга Реалогика',
+        'price': 2500,
+        'description': 'Описание книги по реалогике.',
+    },
+    3: {
+        'count': 8888888888,
+        'name': 'Статус дистрибьютора',
+        'price': 15000,
+        'description': 'Позволяет стать дистрибьютором.',
+    },
+}
