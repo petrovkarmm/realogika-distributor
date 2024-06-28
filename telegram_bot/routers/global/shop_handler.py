@@ -16,11 +16,14 @@ async def global_shop_handler(message: Message, state: FSMContext, dialog_manage
     :param state:
     :return:
     """
+    current_state = await state.get_state()
+
     await message.answer(
         text='Выберите интересующий вас продукт:',
         reply_markup=types.ReplyKeyboardRemove()
     )
 
     await dialog_manager.start(
-        state=ShopDialog.shop_dialog_menu
+        state=ShopDialog.shop_dialog_menu,
+        data=current_state
     )

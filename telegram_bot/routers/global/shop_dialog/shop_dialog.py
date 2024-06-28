@@ -38,11 +38,16 @@ async def quit_from_balance(
     state = middleware_data['state']
     state: FSMContext
 
+    current_state = dialog_manager.start_data['current_state']
+
     await dialog_manager.done()
 
     await state.set_state(
-        'ref_program_menu'
+        current_state
     )
+
+    # Нужно добавить функцию которая на основе current_state выдает нужную клаву.
+
     await cq.message.answer(
         text='Выберите действие:',
         reply_markup=ref_code_keyboard()
