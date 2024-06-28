@@ -12,6 +12,7 @@ from routers.start_command.start_command_router import start_command_router
 
 from dotenv import load_dotenv, find_dotenv
 
+from telegram_bot.middlewares.user_status_checker_middleware import UserStatusCheckMessage, UserStatusCheckCallback
 from telegram_bot.routers.ref_program.balance_dialog.balance_dialog_router import balance_dialog_router
 from telegram_bot.routers.ref_program.ref_program_router import ref_program_router
 
@@ -39,6 +40,10 @@ async def bot_start():
     # dp = Dispatcher(storage=storage)
 
     dp = Dispatcher()
+
+    dp.message.middleware.register(UserStatusCheckMessage())
+    dp.callback_query.middleware.register(UserStatusCheckCallback())
+
 
     setup_dialogs(dp)
 
