@@ -89,9 +89,8 @@ async def shop_items_getter(**_kwargs):
         SHOP_KEY:
             [
                 ShopItem(id=item['id'],
-                         name=ShopItem.counter_checker(name=item['name'], count=item['count']),
-                         price=item['price'],
-                         description=item['description'])
+                         name=ShopItem.counter_checker(name=item['name'], count=item['count'])
+                         )
                 for item in shop_main_page_data_test
             ]
     }

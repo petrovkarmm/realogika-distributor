@@ -8,8 +8,6 @@ SHOP_KEY = "shop"
 class ShopItem:
     id: int
     name: str
-    price: int or float
-    description: str
 
     @staticmethod
     def counter_checker(count: int, name: str):
