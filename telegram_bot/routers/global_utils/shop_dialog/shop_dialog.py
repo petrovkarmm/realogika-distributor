@@ -31,7 +31,7 @@ def shop_item_id_getter(shop_item: ShopItem) -> int:
 
 
 async def quit_from_shop(
-        cq: CallbackQuery,
+        callback: CallbackQuery,
         button: Button,
         dialog_manager: DialogManager
 ):
@@ -49,7 +49,7 @@ async def quit_from_shop(
 
     # Нужно добавить функцию которая на основе current_state выдает нужную клаву.
 
-    await cq.message.answer(
+    await callback.message.answer(
         text='Выберите действие:',
         reply_markup=ref_code_keyboard()
     )
