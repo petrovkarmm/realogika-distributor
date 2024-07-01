@@ -35,7 +35,31 @@ test_full_balance_movement_info = {
     },
 }
 
-shop_main_page_data_test = {
+shop_main_page_data_test = [
+    {
+        'id': 1,
+        'count': 100000,
+        'name': 'Доступ к админке',
+        'price': 30000,
+        'description': 'Статус админа'
+    },
+    {
+        'id': 2,
+        'count': 0,
+        'name': 'Книга Реалогика',
+        'price': 2500,
+        'description': 'Описание книги по реалогике.',
+    },
+    {
+        'id': 3,
+        'count': 8888888888,
+        'name': 'Статус дистрибьютора',
+        'price': 15000,
+        'description': 'Позволяет стать дистрибьютором.',
+    },
+]
+
+test_shop_item_details = {
     1: {
         'count': 100000,
         'name': 'Доступ к админке',
@@ -43,7 +67,7 @@ shop_main_page_data_test = {
         'description': 'Статус админа'
     },
     2: {
-        'count': 15,
+        'count': 0,
         'name': 'Книга Реалогика',
         'price': 2500,
         'description': 'Описание книги по реалогике.',
