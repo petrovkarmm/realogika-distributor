@@ -12,6 +12,7 @@ global_handlers_router = Router()
 async def global_shop_handler(message: Message, state: FSMContext, dialog_manager: DialogManager):
     """
     Запуск диалогового окна магазина с эквайрингом на оплату внутри.
+    :param dialog_manager:
     :param message:
     :param state:
     :return:
@@ -19,7 +20,7 @@ async def global_shop_handler(message: Message, state: FSMContext, dialog_manage
     current_state = await state.get_state()
 
     await message.answer(
-        text='Выберите интересующий вас продукт:',
+        text='Добро пожаловать в магазин.',
         reply_markup=types.ReplyKeyboardRemove()
     )
 

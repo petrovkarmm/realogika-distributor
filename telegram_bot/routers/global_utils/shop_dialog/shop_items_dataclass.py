@@ -8,6 +8,11 @@ SHOP_KEY = "shop"
 class ShopItem:
     id: int
     name: str
-    count: int
     price: int or float
     description: str
+
+    @staticmethod
+    def counter_checker(count: int, name: str):
+        if count <= 0:
+            return f"{name} | Отсутствует"
+        return name
