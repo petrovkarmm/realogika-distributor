@@ -14,9 +14,6 @@ class UserStatusCheckMessage(BaseMiddleware):
             data: Dict[str, Any],
     ) -> Any:
         # Запрос на получение инстанса юзерa
-        print('entering into message MW')
-        print(data)
-        print(event)
         result = await handler(event, data)
         return result
 
@@ -29,8 +26,5 @@ class UserStatusCheckCallback(BaseMiddleware):
             data: Dict[str, Any],
     ) -> Any:
         # Запрос на получение инстанса юзера
-        print('entering into callback MW')
-        print(data)
-        print(event)
         result = await handler(event, data)
         return result
