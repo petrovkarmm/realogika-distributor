@@ -88,12 +88,13 @@ async def shop_items_getter(**_kwargs):
     return {
         SHOP_KEY:
             [
-                ShopItem(id=item['id'],
-                         name=ShopItem.counter_checker(name=item['name'], count=item['count'])
-                         )
+                ShopItem(id=item['id'], name=item['name'])
                 for item in shop_main_page_data_test
+                if item['available']
+
             ]
     }
+
 
 shop_menu_window = Window(
     Const(
@@ -139,7 +140,7 @@ shop_item_detail_window = Window(
         "\nОписание: {dialog_data[description]}",
     ),
     Button(
-      text=Const('Купить'), id='buy_item', on_click=None
+        text=Const('Купить'), id='buy_item', on_click=None
     ),
     Row(
         Button(
