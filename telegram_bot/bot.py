@@ -1,9 +1,13 @@
 import asyncio
 import os
+from pprint import pprint
 
 from aiogram import Bot, Dispatcher, F
+from aiogram.exceptions import TelegramBadRequest
+from aiogram.filters import ExceptionTypeFilter
 from aiogram.fsm.context import FSMContext
-from aiogram.types import Message
+from aiogram.methods.base import TelegramType
+from aiogram.types import Message, ErrorEvent
 from aiogram_dialog import setup_dialogs
 from aiohttp import web
 
