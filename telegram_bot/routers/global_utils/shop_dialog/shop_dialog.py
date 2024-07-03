@@ -30,6 +30,16 @@ def shop_item_id_getter(shop_item: ShopItem) -> int:
     return shop_item.id
 
 
+async def go_to_item_buy_accepting(
+        cq: CallbackQuery,
+        button: Button,
+        dialog_manager: DialogManager
+):
+    await dialog_manager.switch_to(
+        ShopDialog.shop_item_buy_accepting
+    )
+
+
 async def quit_from_shop(
         callback: CallbackQuery,
         button: Button,
@@ -140,7 +150,7 @@ shop_item_detail_window = Window(
         "\nОписание: {dialog_data[description]}",
     ),
     Button(
-        text=Const('Купить'), id='buy_item', on_click=None
+        text=Const('Перейти к покупке'), id='go_to_buy_item', on_click=go_to_item_buy_accepting
     ),
     Row(
         Button(
@@ -154,7 +164,29 @@ shop_item_detail_window = Window(
     state=ShopDialog.shop_item_detail
 )
 
+shop_item_buy_accepting_window = Window(
+    Format(
+        "Пожалуйста, подтвердите покупку.\n\n"
+        "{dialog_data[name]}\n"
+        "Количество: {dialog_data[count]}\n"
+        "Цена: {dialog_data[price]}"
+    ),
+    Button(
+        text=Const("Купить"), id='buy_item', on_click=None
+    ),
+    Row(
+        Button(
+            text=Const("Назад"), id="back", on_click=Back()
+        ),
+        Button(
+            text=Const("Выйти"), id="quit_from_shop", on_click=quit_from_shop
+        ),
+    ),
+    state=ShopDialog.shop_item_buy_accepting
+)
+
 shop_dialog = Dialog(
     shop_menu_window,
-    shop_item_detail_window
+    shop_item_detail_window,
+    shop_item_buy_accepting_window
 )
