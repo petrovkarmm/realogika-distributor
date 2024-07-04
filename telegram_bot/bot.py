@@ -4,7 +4,7 @@ from pprint import pprint
 
 from aiogram import Bot, Dispatcher, F
 from aiogram.exceptions import TelegramBadRequest
-from aiogram.filters import ExceptionTypeFilter
+from aiogram.filters import ExceptionTypeFilter, Command
 from aiogram.fsm.context import FSMContext
 from aiogram.methods.base import TelegramType
 from aiogram.types import Message, ErrorEvent
@@ -76,6 +76,12 @@ async def bot_start():
     async def get_file_id(message: Message, state: FSMContext):
         await message.answer(
             text=str(message.audio.file_id)
+        )
+
+    @dp.message(Command('id'))
+    async def send_user_id(message: Message, state: FSMContext):
+        await message.answer(
+            text=str(message.from_user.id)
         )
 
     @dp.message(F.text == 'ping')
