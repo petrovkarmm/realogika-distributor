@@ -1,6 +1,6 @@
 from typing import Any
 
-from aiogram import F
+from aiogram import F, Bot
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery
 from aiogram_dialog import Dialog, Window, DialogManager
@@ -28,6 +28,32 @@ async def close_dialog(callback: CallbackQuery,
 
 def shop_item_id_getter(shop_item: ShopItem) -> int:
     return shop_item.id
+
+
+async def send_invoice_click(
+        callback_query: CallbackQuery,
+        button: Button,
+        dialog_manager: DialogManager
+):
+    current_shop_item_name = dialog_manager.dialog_data['name']
+    current_shop_item_description = dialog_manager.dialog_data['description']
+    current_shop_item_count = dialog_manager.dialog_data['count']
+    current_shop_item_price = dialog_manager.dialog_data['price']
+
+    current_chat_id = callback_query.message.chat.id
+
+    dialog_middleware_object = dialog_manager.middleware_data
+    bot_object = dialog_middleware_object['bot']
+    bot_object: Bot
+
+    # https://git.yoomoney.ru/projects/SUP/repos/other/browse/telegram_integration.md
+
+    await bot_object.send_invoice(
+        chat_id=current_chat_id,
+        title=current_shop_item_name,
+        description=current_shop_item_description,
+        currency='RUB',
+    )
 
 
 async def go_to_item_buy_accepting(
@@ -172,7 +198,7 @@ shop_item_buy_accepting_window = Window(
         "Цена: {dialog_data[price]}"
     ),
     Button(
-        text=Const("Купить"), id='buy_item', on_click=None
+        text=Const("Купить"), id='buy_item', on_click=send_invoice_click
     ),
     Row(
         Button(
