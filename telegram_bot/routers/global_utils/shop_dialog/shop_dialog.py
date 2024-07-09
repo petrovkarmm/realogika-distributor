@@ -44,14 +44,14 @@ async def send_invoice_click(
     current_shop_item_name = dialog_manager.dialog_data['name']
     current_shop_item_description = dialog_manager.dialog_data['description']
     current_shop_item_count = dialog_manager.dialog_data['count']
-    current_shop_item_price = dialog_manager.dialog_data['price']
+    current_shop_item_price = dialog_manager.dialog_data['price'] * 100
+
+    prices = [
+        LabeledPrice(label="Цена", amount=current_shop_item_price),
+    ]
 
     shop_id = 506751
     shop_article_id = 538350
-
-    prices = [
-        LabeledPrice(label="Цена", amount=100000),
-    ]
 
     provider_token = '381764678:TEST:89271'
     currency = 'RUB'
