@@ -2,7 +2,7 @@ from typing import Any
 
 from aiogram import F, Bot
 from aiogram.fsm.context import FSMContext
-from aiogram.types import CallbackQuery
+from aiogram.types import CallbackQuery, LabeledPrice
 from aiogram_dialog import Dialog, Window, DialogManager
 from aiogram_dialog.widgets.kbd import Button, ScrollingGroup, Column, Select, Back, Row
 from aiogram_dialog.widgets.text import Const, Format
@@ -35,24 +35,42 @@ async def send_invoice_click(
         button: Button,
         dialog_manager: DialogManager
 ):
+    dialog_middleware_object = dialog_manager.middleware_data
+    bot_object = dialog_middleware_object['bot']
+    bot_object: Bot
+
+    current_chat_id = callback_query.message.chat.id
+
     current_shop_item_name = dialog_manager.dialog_data['name']
     current_shop_item_description = dialog_manager.dialog_data['description']
     current_shop_item_count = dialog_manager.dialog_data['count']
     current_shop_item_price = dialog_manager.dialog_data['price']
 
-    current_chat_id = callback_query.message.chat.id
+    shop_id = 506751
+    shop_article_id = 538350
 
-    dialog_middleware_object = dialog_manager.middleware_data
-    bot_object = dialog_middleware_object['bot']
-    bot_object: Bot
+    prices = [
+        LabeledPrice(label="Цена", amount=100000),
+    ]
 
-    # https://git.yoomoney.ru/projects/SUP/repos/other/browse/telegram_integration.md
+    provider_token = '381764678:TEST:89271'
+    currency = 'RUB'
+    payload = '381764678:TEST:89271'
+
+    "botfather token 381764678:TEST:89271"
+    "shopId 506751 shopArticleId 538350"
+    "1111 1111 1111 1026, 12/22, CVC 000."
+
+    # https://yookassa.ru/docs/support/payments/onboarding/integration/cms-module/telegram
 
     await bot_object.send_invoice(
         chat_id=current_chat_id,
         title=current_shop_item_name,
         description=current_shop_item_description,
-        currency='RUB',
+        currency=currency,
+        provider_token=provider_token,
+        payload=payload,
+        prices=prices
     )
 
 
