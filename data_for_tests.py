@@ -40,7 +40,7 @@ shop_main_page_data_test = [
         'id': 1,
         'count': 100000,
         'name': 'Доступ к админке',
-        'price': 30000,
+        'price': 3567,
         'description': 'Статус админа',
         'available': True
     },
@@ -66,7 +66,7 @@ test_shop_item_details = {
     1: {
         'count': 100000,
         'name': 'Доступ к админке',
-        'price': 30000,
+        'price': 3567,
         'description': 'Статус админа'
     },
     2: {
