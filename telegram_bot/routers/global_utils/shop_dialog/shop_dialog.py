@@ -7,6 +7,7 @@ from aiogram_dialog import Dialog, Window, DialogManager
 from aiogram_dialog.widgets.kbd import Button, ScrollingGroup, Column, Select, Back, Row
 from aiogram_dialog.widgets.text import Const, Format
 
+from telegram_bot.routers.global_utils.keyboards import close_invoice
 from telegram_bot.routers.global_utils.shop_dialog.shop_dialog_states import ShopDialog
 from telegram_bot.routers.global_utils.shop_dialog.shop_items_dataclass import ShopItem, SHOP_KEY
 from telegram_bot.routers.ref_program.balance_dialog.balance_dataclass import BalanceMovement, BALANCE_KEY
@@ -37,7 +38,9 @@ async def send_invoice_click(
 ):
     dialog_middleware_object = dialog_manager.middleware_data
     bot_object = dialog_middleware_object['bot']
+    state_object = dialog_middleware_object['state']
     bot_object: Bot
+    state_object: FSMContext
 
     current_chat_id = callback_query.message.chat.id
 
@@ -63,7 +66,20 @@ async def send_invoice_click(
 
     # https://yookassa.ru/docs/support/payments/onboarding/integration/cms-module/telegram
 
-    await bot_object.send_invoice(
+    await callback_query.message.answer(
+        text='*Оплатите покупку нажав кнопку ниже.\n'
+             'Для отмены покупки нажмите кнопку под чатом.*',
+        reply_markup=close_invoice(),
+        parse_mode='Markdown'
+    )
+
+    await dialog_manager.done()
+
+    await state_object.set_state(
+        'on_invoice_payment'
+    )
+
+    invoice_object = await bot_object.send_invoice(
         chat_id=current_chat_id,
         title=current_shop_item_name,
         description=current_shop_item_description,
@@ -72,6 +88,12 @@ async def send_invoice_click(
         payload=payload,
         prices=prices
     )
+
+    await state_object.update_data(
+        invoice_object=invoice_object
+    )
+
+
 
 
 async def go_to_item_buy_accepting(

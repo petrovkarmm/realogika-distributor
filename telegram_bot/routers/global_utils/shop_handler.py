@@ -1,4 +1,5 @@
 from aiogram import Router, F, types
+from aiogram.filters import StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 from aiogram_dialog import DialogManager
@@ -6,6 +7,43 @@ from aiogram_dialog import DialogManager
 from telegram_bot.routers.global_utils.shop_dialog.shop_dialog_states import ShopDialog
 
 global_handlers_router = Router()
+
+
+@global_handlers_router.message(StateFilter('on_invoice_payment'),
+                                F.text == 'Отменить покупку')
+async def cancel_payment(message: Message, state: FSMContext, dialog_manager: DialogManager):
+    state_data = await state.get_data()
+    try:
+        invoice_object = state_data['invoice_object']
+        invoice_object: Message
+    except KeyError:
+        current_state = await state.get_state()
+
+        await message.answer(
+            text='Добро пожаловать в магазин.',
+            reply_markup=types.ReplyKeyboardRemove()
+        )
+
+        await dialog_manager.start(
+            state=ShopDialog.shop_dialog_menu,
+            data=current_state
+        )
+    else:
+        try:
+            await invoice_object.delete()
+        except Exception as E:
+            pass
+        current_state = await state.get_state()
+
+        await message.answer(
+            text='Добро пожаловать в магазин.',
+            reply_markup=types.ReplyKeyboardRemove()
+        )
+
+        await dialog_manager.start(
+            state=ShopDialog.shop_dialog_menu,
+            data=current_state
+        )
 
 
 @global_handlers_router.message(F.text == 'Магазин')

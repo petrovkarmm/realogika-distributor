@@ -78,22 +78,38 @@ async def bot_start():
         :param state:
         :return:
         """
-        await message.answer(
-            text='Успешная оплата. Возврат диалога магазина.'
-        )
+        state_data = await state.get_data()
+        try:
+            invoice_object = state_data['invoice_object']
+            invoice_object: Message
+        except KeyError:
+            current_state = await state.get_state()
 
-        current_state = await state.get_state()
-        dialog_manager.show_mode = ShowMode.DELETE_AND_SEND
+            await message.answer(
+                text='Добро пожаловать в магазин.',
+                reply_markup=types.ReplyKeyboardRemove()
+            )
 
-        await message.answer(
-            text='Добро пожаловать в магазин.',
-            reply_markup=types.ReplyKeyboardRemove()
-        )
+            await dialog_manager.start(
+                state=ShopDialog.shop_dialog_menu,
+                data=current_state
+            )
+        else:
+            try:
+                await invoice_object.delete()
+            except Exception as E:
+                pass
+            current_state = await state.get_state()
 
-        await dialog_manager.start(
-            state=ShopDialog.shop_dialog_menu,
-            data=current_state
-        )
+            await message.answer(
+                text='Добро пожаловать в магазин.',
+                reply_markup=types.ReplyKeyboardRemove()
+            )
+
+            await dialog_manager.start(
+                state=ShopDialog.shop_dialog_menu,
+                data=current_state
+            )
 
     @dp.message(F.document)
     async def get_file_id(message: Message, state: FSMContext):
