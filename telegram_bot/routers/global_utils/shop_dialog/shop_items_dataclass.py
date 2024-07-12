@@ -7,10 +7,10 @@ SHOP_KEY = "shop"
 @dataclass
 class ShopItem:
     id: int
-    name: str
+    title: str
 
     @staticmethod
-    def counter_checker(count: int, name: str):
+    def counter_checker(count: int, title: str):
         if count <= 0:
-            return f"{name} | Отсутствует"
-        return name
+            return f"{title} | Отсутствует"
+        return title
