@@ -1,3 +1,4 @@
+from pprint import pprint
 from typing import Any
 
 from aiogram import F, Bot
@@ -8,6 +9,7 @@ from aiogram_dialog.widgets.kbd import Button, ScrollingGroup, Column, Select, B
 from aiogram_dialog.widgets.text import Const, Format
 
 from telegram_bot.routers.global_utils.keyboards import close_invoice
+from telegram_bot.routers.global_utils.shop_dialog.shop_dialog_fetchers import get_all_shop_items
 from telegram_bot.routers.global_utils.shop_dialog.shop_dialog_states import ShopDialog
 from telegram_bot.routers.global_utils.shop_dialog.shop_items_dataclass import ShopItem, SHOP_KEY
 from telegram_bot.routers.ref_program.balance_dialog.balance_dataclass import BalanceMovement, BALANCE_KEY
@@ -94,8 +96,6 @@ async def send_invoice_click(
     )
 
 
-
-
 async def go_to_item_buy_accepting(
         cq: CallbackQuery,
         button: Button,
@@ -158,15 +158,19 @@ async def on_shop_item_selected(
 async def shop_items_getter(**_kwargs):
     dialog_manager = _kwargs['dialog_manager']
 
-    if shop_main_page_data_test:
+    shop_items_object = await get_all_shop_items()
+
+    pprint(shop_items_object)
+
+    if shop_items_object:
         dialog_manager.dialog_data['flag'] = True
 
     return {
         SHOP_KEY:
             [
-                ShopItem(id=item['id'], name=item['name'])
-                for item in shop_main_page_data_test
-                if item['available']
+                ShopItem(id=item['id'], title=item['title'])
+                for item in shop_items_object
+                # if item['available'] раскомитить после добавления боля в бд
 
             ]
     }
@@ -184,7 +188,7 @@ shop_menu_window = Window(
     ScrollingGroup(
         Column(
             Select(
-                text=Format("{item.name}"),
+                text=Format("{item.title}"),
                 id="shop_item_select",
                 items=SHOP_KEY,
                 item_id_getter=shop_item_id_getter,
