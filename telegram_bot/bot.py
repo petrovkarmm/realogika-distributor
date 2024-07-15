@@ -99,17 +99,28 @@ async def bot_start():
                 await invoice_object.delete()
             except Exception as E:
                 pass
-            current_state = await state.get_state()
+            else:
+                try:
+                    text_after_payment = state_data['text_after_payment']
+                except KeyError:
+                    pass
+                else:
 
-            await message.answer(
-                text='Добро пожаловать в магазин.',
-                reply_markup=types.ReplyKeyboardRemove()
-            )
+                    await message.answer(
+                        text=text_after_payment
+                    )
 
-            await dialog_manager.start(
-                state=ShopDialog.shop_dialog_menu,
-                data=current_state
-            )
+                    current_state = await state.get_state()
+
+                    await message.answer(
+                        text='Добро пожаловать в магазин.',
+                        reply_markup=types.ReplyKeyboardRemove()
+                    )
+
+                    await dialog_manager.start(
+                        state=ShopDialog.shop_dialog_menu,
+                        data=current_state
+                    )
 
     @dp.message(F.document)
     async def get_file_id(message: Message, state: FSMContext):
