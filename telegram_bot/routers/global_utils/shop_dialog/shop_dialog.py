@@ -133,12 +133,52 @@ async def on_shop_item_selected(
         dialog_manager: DialogManager,
         shop_item_id: int,
 ):
+    dialog_manager_middleware_object = dialog_manager.middleware_data
+
+    state_object = dialog_manager_middleware_object['state']
+    state_object: FSMContext
+
     shop_item_detail_info = await get_item_from_shop(shop_item_id)
 
+    test_data = {'action': {'created_at': '2024-06-07T05:52:23',
+                            'id': 1,
+                            'name': 'Активировать роль',
+                            'updated_at': '2024-06-07T05:52:23'},
+                 'action_id': 1,
+                 'additional': '1',
+                 'created_at': '2024-06-07T05:53:15',
+                 'id': 1,
+                 'offers': [{'category_id': 1,
+                             'count': 1,
+                             'created_at': '2024-06-07T05:58:43',
+                             'description': 'Купить роль Дистрибьютор',
+                             'duration': 30,
+                             'exists_reward': True,
+                             'gates': '[1,2]',
+                             'id': 1,
+                             'link_presentation': None,
+                             'price': 150000,
+                             'product_id': 1,
+                             'recurrent': 0,
+                             'status': 1,
+                             'text_after_payment': 'Спасибо, оплата прошла успешно, доступ вам '
+                                                   'выдан.\r\n'
+                                                   'Удачного опыта использования платформы!',
+                             'title': 'Купить роль Дистрибьютор',
+                             'updated_at': '2024-06-07T05:58:43',
+                             'url_image': None}],
+                 'title': 'Роль Дистрибьютор',
+                 'updated_at': '2024-06-07T05:53:15'}
+
+    text_after_payment = shop_item_detail_info['offers'][0]['text_after_payment']
     dialog_manager.dialog_data['title'] = shop_item_detail_info['title']
     dialog_manager.dialog_data['price'] = shop_item_detail_info['offers'][0]['price']
     dialog_manager.dialog_data['action'] = shop_item_detail_info['action']['name']
     dialog_manager.dialog_data['description'] = shop_item_detail_info['offers'][0]['description']
+
+    await state_object.update_data(
+        text_after_payment=text_after_payment
+    )
 
     await dialog_manager.switch_to(
         ShopDialog.shop_item_detail
@@ -149,8 +189,6 @@ async def shop_items_getter(**_kwargs):
     dialog_manager = _kwargs['dialog_manager']
 
     shop_items_object = await get_all_items_from_shop()
-
-    pprint(shop_items_object)
 
     if shop_items_object:
         dialog_manager.dialog_data['flag'] = True
