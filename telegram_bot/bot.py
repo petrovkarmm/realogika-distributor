@@ -85,10 +85,14 @@ async def bot_start():
         except KeyError:
             current_state = await state.get_state()
 
+            await asyncio.sleep(1)
+
             await message.answer(
                 text='Добро пожаловать в магазин.',
                 reply_markup=types.ReplyKeyboardRemove()
             )
+
+            await asyncio.sleep(1)
 
             await dialog_manager.start(
                 state=ShopDialog.shop_dialog_menu,
@@ -106,16 +110,22 @@ async def bot_start():
                     pass
                 else:
 
+                    await asyncio.sleep(1)
+
                     await message.answer(
                         text=text_after_payment
                     )
 
                     current_state = await state.get_state()
 
+                    await asyncio.sleep(1)
+
                     await message.answer(
                         text='Добро пожаловать в магазин.',
                         reply_markup=types.ReplyKeyboardRemove()
                     )
+
+                    await asyncio.sleep(1)
 
                     await dialog_manager.start(
                         state=ShopDialog.shop_dialog_menu,
