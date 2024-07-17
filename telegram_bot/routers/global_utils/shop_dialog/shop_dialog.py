@@ -46,6 +46,7 @@ async def send_invoice_click(
     current_shop_item_name = dialog_manager.dialog_data['title']
     current_shop_item_description = dialog_manager.dialog_data['description']
     current_shop_item_price = dialog_manager.dialog_data['price'] * 100
+    current_shop_item_id = dialog_manager.dialog_data['id']
 
     current_shop_item_price = 10000  # ДЛЯ ТЕСТОВ ПОТОМ УБРАТЬ!
 
@@ -90,7 +91,8 @@ async def send_invoice_click(
     )
 
     await state_object.update_data(
-        invoice_object=invoice_object
+        invoice_object=invoice_object,
+        current_shop_item_id=current_shop_item_id
     )
 
 
@@ -174,6 +176,7 @@ async def on_shop_item_selected(
 
     text_after_payment = shop_item_detail_info['offers'][0]['text_after_payment']
     dialog_manager.dialog_data['title'] = shop_item_detail_info['title']
+    dialog_manager.dialog_data['id'] = shop_item_detail_info['id']
     dialog_manager.dialog_data['price'] = shop_item_detail_info['offers'][0]['price']
     dialog_manager.dialog_data['action'] = shop_item_detail_info['action']['name']
     dialog_manager.dialog_data['description'] = shop_item_detail_info['offers'][0]['description']
@@ -245,7 +248,12 @@ shop_item_detail_window = Window(
         "\nОписание: {dialog_data[description]}",
     ),
     Button(
-        text=Format('{dialog_data[action]}'), id='go_to_buy_item', on_click=go_to_item_buy_accepting
+        text=Format('Купить'), id='go_to_buy_item', on_click=go_to_item_buy_accepting,
+        when=F['dialog_data']['price'] > 0
+    ),
+    Button(
+        text=Format('Получить'), id='get_item_free', on_click=None,
+        when=F['dialog_data']['price'] == 0
     ),
     Row(
         Button(
