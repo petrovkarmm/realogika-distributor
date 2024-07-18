@@ -144,41 +144,16 @@ async def on_shop_item_selected(
 
     shop_item_detail_info = await get_item_from_shop(shop_item_id)
 
-    test_data = {'action': {'created_at': '2024-06-07T05:52:23',
-                            'id': 1,
-                            'name': 'Активировать роль',
-                            'updated_at': '2024-06-07T05:52:23'},
-                 'action_id': 1,
-                 'additional': '1',
-                 'created_at': '2024-06-07T05:53:15',
-                 'id': 1,
-                 'offers': [{'category_id': 1,
-                             'count': 1,
-                             'created_at': '2024-06-07T05:58:43',
-                             'description': 'Купить роль Дистрибьютор',
-                             'duration': 30,
-                             'exists_reward': True,
-                             'gates': '[1,2]',
-                             'id': 1,
-                             'link_presentation': None,
-                             'price': 150000,
-                             'product_id': 1,
-                             'recurrent': 0,
-                             'status': 1,
-                             'text_after_payment': 'Спасибо, оплата прошла успешно, доступ вам '
-                                                   'выдан.\r\n'
-                                                   'Удачного опыта использования платформы!',
-                             'title': 'Купить роль Дистрибьютор',
-                             'updated_at': '2024-06-07T05:58:43',
-                             'url_image': None}],
-                 'title': 'Роль Дистрибьютор',
-                 'updated_at': '2024-06-07T05:53:15'}
-
     text_after_payment = shop_item_detail_info['offers'][0]['text_after_payment']
+    url_image = shop_item_detail_info['offers'][0]['url_image']
+    if not url_image:
+        url_image = 'https://th.bing.com/th/id/OIP.Nskk7OgDwsE73BbF1kYVLwAAAA?rs=1&pid=ImgDetMain'
+
     dialog_manager.dialog_data['title'] = shop_item_detail_info['title']
     dialog_manager.dialog_data['id'] = shop_item_detail_info['id']
     dialog_manager.dialog_data['price'] = shop_item_detail_info['offers'][0]['price']
     dialog_manager.dialog_data['action'] = shop_item_detail_info['action']['name']
+    dialog_manager.dialog_data['url_image'] = url_image
     dialog_manager.dialog_data['description'] = shop_item_detail_info['offers'][0]['description']
 
     await state_object.update_data(
@@ -246,6 +221,13 @@ shop_item_detail_window = Window(
         "Название товара: {dialog_data[title]}."
         "\nЦена: {dialog_data[price]} руб."
         "\nОписание: {dialog_data[description]}",
+        when=F['dialog_data']['price'] > 0
+    ),
+    Format(
+        "Название товара: {dialog_data[title]}."
+        "\nЦена: Бесплатно"
+        "\nОписание: {dialog_data[description]}",
+        when=F['dialog_data']['price'] == 0
     ),
     Button(
         text=Format('Купить'), id='go_to_buy_item', on_click=go_to_item_buy_accepting,
@@ -271,7 +253,14 @@ shop_item_buy_accepting_window = Window(
     Format(
         "Пожалуйста, подтвердите покупку.\n\n"
         "{dialog_data[title]}\n"
-        "Цена: {dialog_data[price]} рублей"
+        "Цена: {dialog_data[price]} рублей",
+        when=F['dialog_data']['price'] > 0
+    ),
+    Format(
+        "Пожалуйста, подтвердите покупку.\n\n"
+        "{dialog_data[title]}\n"
+        "Цена: Бесплатно",
+        when=F['dialog_data']['price'] == 0
     ),
     Button(
         text=Const("Подтверждаю"), id='buy_item', on_click=send_invoice_click
@@ -284,7 +273,7 @@ shop_item_buy_accepting_window = Window(
             text=Const("Выйти"), id="quit_from_shop", on_click=quit_from_shop
         ),
     ),
-    state=ShopDialog.shop_item_buy_accepting
+    state=ShopDialog.shop_item_buy_accepting,
 )
 
 shop_dialog = Dialog(
