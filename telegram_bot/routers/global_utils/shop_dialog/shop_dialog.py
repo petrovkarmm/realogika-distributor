@@ -6,8 +6,10 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, LabeledPrice
 from aiogram_dialog import Dialog, Window, DialogManager
 from aiogram_dialog.widgets.kbd import Button, ScrollingGroup, Column, Select, Back, Row
+from aiogram_dialog.widgets.media import DynamicMedia, StaticMedia
 from aiogram_dialog.widgets.text import Const, Format
 
+from data_for_tests import test_data_list, detail_item_test_data
 from telegram_bot.routers.global_utils.keyboards import close_invoice
 from telegram_bot.routers.global_utils.shop_dialog.shop_dialog_fetchers import get_all_items_from_shop, \
     get_item_from_shop
@@ -142,7 +144,8 @@ async def on_shop_item_selected(
     state_object = dialog_manager_middleware_object['state']
     state_object: FSMContext
 
-    shop_item_detail_info = await get_item_from_shop(shop_item_id)
+    # shop_item_detail_info = await get_item_from_shop(shop_item_id)
+    shop_item_detail_info = detail_item_test_data.get(int(shop_item_id))
 
     text_after_payment = shop_item_detail_info['offers'][0]['text_after_payment']
     url_image = shop_item_detail_info['offers'][0]['url_image']
@@ -152,7 +155,6 @@ async def on_shop_item_selected(
     dialog_manager.dialog_data['title'] = shop_item_detail_info['title']
     dialog_manager.dialog_data['id'] = shop_item_detail_info['id']
     dialog_manager.dialog_data['price'] = shop_item_detail_info['offers'][0]['price']
-    dialog_manager.dialog_data['action'] = shop_item_detail_info['action']['name']
     dialog_manager.dialog_data['url_image'] = url_image
     dialog_manager.dialog_data['description'] = shop_item_detail_info['offers'][0]['description']
 
@@ -169,6 +171,7 @@ async def shop_items_getter(**_kwargs):
     dialog_manager = _kwargs['dialog_manager']
 
     shop_items_object = await get_all_items_from_shop()
+    shop_items_object = test_data_list
 
     if shop_items_object:
         dialog_manager.dialog_data['flag'] = True
@@ -236,6 +239,9 @@ shop_item_detail_window = Window(
     Button(
         text=Format('Получить'), id='get_item_free', on_click=None,
         when=F['dialog_data']['price'] == 0
+    ),
+    StaticMedia(
+        url=Format('{dialog_data[url_image]}')
     ),
     Row(
         Button(
