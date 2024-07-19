@@ -108,6 +108,23 @@ async def go_to_item_buy_accepting(
     )
 
 
+async def get_item_free(
+        callback: CallbackQuery,
+        button: Button,
+        dialog_manager: DialogManager,
+):
+    current_shop_item_id = dialog_manager.dialog_data['id']
+    current_user_id = callback.message.from_user.id
+    await callback.message.answer(
+        text=f'ID shop_item: {current_shop_item_id}\n'
+             f'TG user_id: {current_user_id}'
+    )
+
+    await dialog_manager.switch_to(
+        ShopDialog.shop_dialog_menu
+    )
+
+
 async def quit_from_shop(
         callback: CallbackQuery,
         button: Button,
@@ -237,7 +254,7 @@ shop_item_detail_window = Window(
         when=F['dialog_data']['price'] > 0
     ),
     Button(
-        text=Format('Получить'), id='get_item_free', on_click=None,
+        text=Format('Получить'), id='get_item_free', on_click=get_item_free,
         when=F['dialog_data']['price'] == 0
     ),
     StaticMedia(
