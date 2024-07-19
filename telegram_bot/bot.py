@@ -85,14 +85,6 @@ async def bot_start():
         except KeyError:
             current_state = await state.get_state()
 
-            current_shop_item_id = state_data['current_shop_item_id']
-            user_telegram_id = message.from_user.id
-
-            await message.answer(
-                text='Testing user_id and shop_item_id:\n'
-                     f'User_id {user_telegram_id}\n'
-                     f'Shop_item_id: {current_shop_item_id}'
-            )
 
             await asyncio.sleep(1)
 
@@ -118,6 +110,14 @@ async def bot_start():
                 except KeyError:
                     pass
                 else:
+                    current_shop_item_id = state_data['current_shop_item_id']
+                    user_telegram_id = message.from_user.id
+
+                    await message.answer(
+                        text='Testing user_id and shop_item_id:\n'
+                             f'User_id {user_telegram_id}\n'
+                             f'Shop_item_id: {current_shop_item_id}'
+                    )
 
                     await asyncio.sleep(1)
 
