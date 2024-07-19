@@ -83,6 +83,52 @@ test_shop_item_details = {
     },
 }
 
+shop_test_data = [{'title': 'Роль Дистрибьютор', 'action_id': 1, 'additional': '1', 'created_at': '2024-06-07T05:53:15',
+                   'updated_at': '2024-06-07T05:53:15',
+                   'action': {'name': 'Активировать роль', 'created_at': '2024-06-07T05:52:23',
+                              'updated_at': '2024-06-07T05:52:23', 'id': 1}, 'offers': [
+        {'product_id': 1, 'status': 1, 'recurrent': 0, 'description': 'Стать почётным дистрибьютором компании Реалогика', 'duration': 30,
+         'url_image': 'https://bot2.biz/img/cover.jpg', 'gates': '[1,2]', 'updated_at': '2024-06-07T05:58:43',
+         'category_id': 1,
+         'title': 'Купить роль Дистрибьютор', 'price': 4500, 'exists_reward': True, 'count': 1,
+         'text_after_payment': 'Спасибо, оплата прошла успешно, доступ вам выдан.\r\nУдачного опыта использования платформы!',
+         'link_presentation': None, 'created_at': '2024-06-07T05:58:43', 'id': 1}], 'id': 1},
+                  {'title': 'Книжка Реалогика', 'action_id': 1, 'additional': '1',
+                   'created_at': '2024-06-07T05:53:15', 'updated_at': '2024-06-07T05:53:15',
+                   'action': {'name': 'Активировать роль', 'created_at': '2024-06-07T05:52:23',
+                              'updated_at': '2024-06-07T05:52:23', 'id': 1}, 'offers': [
+                      {'product_id': 2, 'status': 1, 'recurrent': 0, 'description': 'Заказать себе книжку',
+                       'duration': 30,
+                       'url_image': 'https://s0.rbk.ru/v6_top_pics/resized/640xH/media/img/6/66/756781385365666.webp',
+                       'gates': '[1,2]', 'updated_at': '2024-06-07T05:58:43',
+                       'category_id': 1, 'title': 'Купить роль Дистрибьютор 2', 'price': 1500, 'exists_reward': True,
+                       'count': 2,
+                       'text_after_payment': 'Спасибо, оплата прошла успешно, доступ вам выдан.\r\nУдачного опыта использования платформы!',
+                       'link_presentation': None, 'created_at': '2024-06-07T05:58:43', 'id': 2}], 'id': 2}]
+
+detail_tests = {
+    1: {'title': 'Роль Дистрибьютор', 'action_id': 1, 'additional': '1', 'created_at': '2024-06-07T05:53:15',
+        'updated_at': '2024-06-07T05:53:15',
+        'action': {'name': 'Активировать роль', 'created_at': '2024-06-07T05:52:23',
+                   'updated_at': '2024-06-07T05:52:23', 'id': 1}, 'offers': [
+            {'product_id': 1, 'status': 1, 'recurrent': 0, 'description': 'Стать почётным дистрибьютором компании Реалогика', 'duration': 30,
+             'url_image': None, 'gates': '[1,2]', 'updated_at': '2024-06-07T05:58:43', 'category_id': 1,
+             'title': 'Купить роль Дистрибьютор', 'price': 4500, 'exists_reward': True, 'count': 1,
+             'text_after_payment': 'Спасибо, оплата прошла успешно, доступ вам выдан.\r\nУдачного опыта использования платформы!',
+             'link_presentation': None, 'created_at': '2024-06-07T05:58:43', 'id': 1}], 'id': 1},
+    2: {'title': 'Книжка Реалогика', 'action_id': 1, 'additional': '1', 'created_at': '2024-06-07T05:53:15',
+        'updated_at': '2024-06-07T05:53:15',
+        'action': {'name': 'Активировать роль', 'created_at': '2024-06-07T05:52:23',
+                   'updated_at': '2024-06-07T05:52:23', 'id': 1}, 'offers': [
+            {'product_id': 2, 'status': 1, 'recurrent': 0, 'description': 'Заказать себе книжку Реалогика на дом.',
+             'duration': 30, 'url_image': 'https://s.a-5.ru/i/file/161/7/7b/32/7b3238734155d0d8.jpg', 'gates': '[1,2]',
+             'updated_at': '2024-06-07T05:58:43',
+             'category_id': 1, 'title': 'Купить роль Дистрибьютор 2', 'price': 1500, 'exists_reward': True,
+             'count': 2,
+             'text_after_payment': 'Спасибо, оплата прошла успешно, Книжка будет отправлена в ближайшее время!.\r\nХорошего чтения!',
+             'link_presentation': None, 'created_at': '2024-06-07T05:58:43', 'id': 2}], 'id': 2}
+    }
+
 test_data_list = [
     {'id': 1,
      'offers': [{'category_id': 1,
