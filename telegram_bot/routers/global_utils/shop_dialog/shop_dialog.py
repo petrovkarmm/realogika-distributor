@@ -116,8 +116,9 @@ async def get_item_free(
     current_shop_item_id = dialog_manager.dialog_data['id']
     current_user_id = callback.message.from_user.id
     await callback.message.answer(
-        text=f'ID shop_item: {current_shop_item_id}\n'
-             f'TG user_id: {current_user_id}'
+        text=f'Testing user_id and shop_item_id:\n'
+             f'User_id: {current_user_id}\n '
+             f'Shop_item_id: {current_shop_item_id}'
     )
 
     await dialog_manager.switch_to(

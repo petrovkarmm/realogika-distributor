@@ -85,7 +85,6 @@ async def bot_start():
         except KeyError:
             current_state = await state.get_state()
 
-
             await asyncio.sleep(1)
 
             await message.answer(
@@ -115,7 +114,7 @@ async def bot_start():
 
                     await message.answer(
                         text='Testing user_id and shop_item_id:\n'
-                             f'User_id {user_telegram_id}\n'
+                             f'User_id: {user_telegram_id}\n'
                              f'Shop_item_id: {current_shop_item_id}'
                     )
 
