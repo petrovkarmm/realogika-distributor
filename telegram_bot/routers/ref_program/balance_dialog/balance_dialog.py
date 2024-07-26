@@ -85,37 +85,6 @@ async def user_balance_movement_getter(**_kwargs):
     }
 
 
-# balance_menu = Window(
-#     Const("Добро пожаловать в меню CRM бота.\n\n"
-#           "Выберите действие: "),
-#     SwitchTo(
-#         text=Const("➕ Создать задачу"), id="make_task",
-#         # when=is_admin
-#     ),
-#     Row(
-#         SwitchTo(
-#             text=Const("📥 Задачи для меня"), id="my_tasks", state=DialogTaskMenu.my_tasks
-#         ),
-#         SwitchTo(
-#             text=Const("✉️ Задачи от меня"), id="my_orders", state=DialogTaskMenu.my_orders
-#         )
-#     ),
-#     Button(
-#         text=Const("🔚 Выйти"), id="close_dialog", on_click=close_dialog
-#     ),
-#     state=state=BalanceDialog.balance_dialog_menu
-# )
-
-# Баланс - выводим список его последних 20 начислений/списаний.
-# И ниже три подсчитанных значения:
-# Всего заработано: Сумма
-# Всего выведено: Сумма
-# Баланс: Сумма
-
-# dialog_manager.dialog_data['current_balance'] = 12346
-# dialog_manager.dialog_data['all_replenishments'] = 100000
-# dialog_manager.dialog_data['all_write_offs'] = 20000
-
 balance_menu_window = Window(
     Const(
         "У вас отсутствую движения по балансу.",
