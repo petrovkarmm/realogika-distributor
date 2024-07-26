@@ -94,7 +94,8 @@ async def send_invoice_click(
 
     await state_object.update_data(
         invoice_object=invoice_object,
-        current_shop_item_id=current_shop_item_id
+        current_shop_item_id=current_shop_item_id,
+        current_payload=payload
     )
 
 
