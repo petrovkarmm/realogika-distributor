@@ -88,9 +88,10 @@ async def ref_program_menu_handler(message: Message, state: FSMContext):
 @global_handlers_router.message(StateFilter('ref_program_menu'), F.text == 'Баланс')
 async def open_balance_dialog_handler(message: Message, state: FSMContext, dialog_manager: DialogManager):
     """
-    Открытие диалога c балансом
+    Открытие диалога с балансом
     :param message:
     :param state:
+    :param dialog_manager:
     :return:
     """
 
