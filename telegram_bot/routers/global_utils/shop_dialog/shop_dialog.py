@@ -10,6 +10,7 @@ from aiogram_dialog.widgets.media import DynamicMedia, StaticMedia
 from aiogram_dialog.widgets.text import Const, Format
 
 from data_for_tests import test_data_list, detail_item_test_data
+from telegram_bot.routers.global_utils.func_utils import uuid_generation
 from telegram_bot.routers.global_utils.keyboards import close_invoice, ref_program_menu
 from telegram_bot.routers.global_utils.shop_dialog.shop_dialog_fetchers import get_all_items_from_shop, \
     get_item_from_shop
@@ -61,7 +62,7 @@ async def send_invoice_click(
 
     provider_token = '381764678:TEST:89271'
     currency = 'RUB'
-    payload = '381764678:TEST:89271'
+    payload = await uuid_generation()
 
     "botfather token 381764678:TEST:89271"
     "shopId 506751 shopArticleId 538350"
