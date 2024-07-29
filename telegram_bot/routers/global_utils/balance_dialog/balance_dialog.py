@@ -7,10 +7,11 @@ from aiogram_dialog import Dialog, Window, DialogManager
 from aiogram_dialog.widgets.kbd import Button, ScrollingGroup, Column, Select, Back
 from aiogram_dialog.widgets.text import Const, Format
 
-from telegram_bot.routers.ref_program.balance_dialog.balance_dataclass import BalanceMovement, BALANCE_KEY
-from telegram_bot.routers.ref_program.balance_dialog.balance_dialog_states import BalanceDialog
+from telegram_bot.routers.global_utils.balance_dialog.balance_dataclass import BalanceMovement, BALANCE_KEY
+from telegram_bot.routers.global_utils.balance_dialog.balance_dialog_states import BalanceDialog
 from data_for_tests import test_user_balance_movement_data, \
     test_full_balance_movement_info
+from telegram_bot.routers.global_utils.keyboards import ref_program_menu
 from telegram_bot.routers.start_command.keyboards import ref_code_keyboard
 
 
@@ -46,7 +47,7 @@ async def quit_from_balance(
     )
     await cq.message.answer(
         text='Выберите действие:',
-        reply_markup=ref_code_keyboard()
+        reply_markup=ref_program_menu()
     )
 
 

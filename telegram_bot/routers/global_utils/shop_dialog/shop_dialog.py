@@ -10,7 +10,7 @@ from aiogram_dialog.widgets.media import DynamicMedia, StaticMedia
 from aiogram_dialog.widgets.text import Const, Format
 
 from data_for_tests import test_data_list, detail_item_test_data
-from telegram_bot.routers.global_utils.keyboards import close_invoice
+from telegram_bot.routers.global_utils.keyboards import close_invoice, ref_program_menu
 from telegram_bot.routers.global_utils.shop_dialog.shop_dialog_fetchers import get_all_items_from_shop, \
     get_item_from_shop
 from telegram_bot.routers.global_utils.shop_dialog.shop_dialog_states import ShopDialog
@@ -148,7 +148,7 @@ async def quit_from_shop(
 
     await callback.message.answer(
         text='Выберите действие:',
-        reply_markup=ref_code_keyboard()
+        reply_markup=ref_program_menu()
     )
 
 

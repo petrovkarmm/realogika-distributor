@@ -1,6 +1,6 @@
 from aiogram import Router
 
-from telegram_bot.routers.ref_program.balance_dialog.balance_dialog import balance_dialog
+from telegram_bot.routers.global_utils.balance_dialog.balance_dialog import balance_dialog
 
 balance_dialog_router = Router()
 

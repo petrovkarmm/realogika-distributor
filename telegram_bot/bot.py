@@ -1,15 +1,11 @@
 import asyncio
 import os
-from pprint import pprint
 
 from aiogram import Bot, Dispatcher, F, types
-from aiogram.exceptions import TelegramBadRequest
-from aiogram.filters import ExceptionTypeFilter, Command
+from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
-from aiogram.methods.base import TelegramType
-from aiogram.types import Message, ErrorEvent, PreCheckoutQuery
-from aiogram_dialog import setup_dialogs, DialogManager, ShowMode
-from aiohttp import web
+from aiogram.types import Message, PreCheckoutQuery
+from aiogram_dialog import setup_dialogs, DialogManager
 
 from routers.ref_code_no_roles.ref_code_no_roles_router import ref_code_no_roles_router
 from routers.start_command.start_command_router import start_command_router
@@ -19,9 +15,8 @@ from dotenv import load_dotenv, find_dotenv
 from telegram_bot.middlewares.user_status_checker_middleware import UserStatusCheckMessage, UserStatusCheckCallback
 from telegram_bot.routers.global_utils.shop_dialog.shop_dialog_router import shop_dialog_router
 from telegram_bot.routers.global_utils.shop_dialog.shop_dialog_states import ShopDialog
-from telegram_bot.routers.global_utils.shop_handler import global_handlers_router
-from telegram_bot.routers.ref_program.balance_dialog.balance_dialog_router import balance_dialog_router
-from telegram_bot.routers.ref_program.ref_program_router import ref_program_router
+from telegram_bot.routers.global_utils.global_handler import global_handlers_router
+from telegram_bot.routers.global_utils.balance_dialog.balance_dialog_router import balance_dialog_router
 
 load_dotenv(find_dotenv())
 
@@ -59,7 +54,6 @@ async def bot_start():
     dp.include_router(global_handlers_router)
     dp.include_router(start_command_router)
     dp.include_router(ref_code_no_roles_router)
-    dp.include_router(ref_program_router)
 
     @dp.pre_checkout_query(lambda query: True)
     async def checkout_process(pre_checkout_query: PreCheckoutQuery):
