@@ -104,12 +104,14 @@ async def bot_start():
                     pass
                 else:
                     current_shop_item_id = state_data['current_shop_item_id']
+                    current_payload = state_data['current_payload']
                     user_telegram_id = message.from_user.id
 
                     await message.answer(
                         text='Testing user_id and shop_item_id:\n'
                              f'User_id: {user_telegram_id}\n'
-                             f'Shop_item_id: {current_shop_item_id}'
+                             f'Shop_item_id: {current_shop_item_id}\n'
+                             f'Payload: {current_payload}'
                     )
 
                     await asyncio.sleep(1)
