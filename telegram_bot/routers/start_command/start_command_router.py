@@ -3,7 +3,8 @@ from aiogram.filters import Command, StateFilter, CommandObject
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
-from telegram_bot.routers.start_command.keyboards import ref_code_no_roles_keyboard, ref_code_keyboard
+from telegram_bot.routers.start_command.keyboards import ref_code_no_roles_keyboard, ref_code_keyboard, \
+    only_ref_program_keyboard
 
 start_command_router = Router()
 
@@ -37,7 +38,8 @@ async def getting_start_with_new_users(message: Message, state: FSMContext, comm
     else:
         await message.answer(
             text='Добро пожаловать в бота дистрибьютора Релогики!\n'
-                 'Чтобы воспользоваться ботом необходимо использовать ссылку приглашение.'
+                 'Чтобы воспользоваться ботом необходимо использовать ссылку приглашение.',
+            reply_markup=only_ref_program_keyboard()
         )
 
 
@@ -45,5 +47,6 @@ async def getting_start_with_new_users(message: Message, state: FSMContext, comm
 async def answer_on_spam_from_none(message: Message, state: FSMContext):
     await message.answer(
         text='Добро пожаловать в бота дистрибьютора Релогики!\n'
-             'Чтобы воспользоваться ботом необходимо использовать ссылку приглашение.'
+             'Чтобы воспользоваться ботом необходимо использовать ссылку приглашение.',
+        reply_markup=only_ref_program_keyboard()
     )
