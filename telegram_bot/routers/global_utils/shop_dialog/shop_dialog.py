@@ -57,15 +57,10 @@ async def send_invoice_click(
         LabeledPrice(label="Цена", amount=current_shop_item_price),
     ]
 
-    shop_id = 506751
-    shop_article_id = 538350
-
     provider_token = '381764678:TEST:89271'
     currency = 'RUB'
     payload = await uuid_generation()
 
-    "botfather token 381764678:TEST:89271"
-    "shopId 506751 shopArticleId 538350"
     "1111 1111 1111 1026, 12/22, CVC 000."
 
     # https://yookassa.ru/docs/support/payments/onboarding/integration/cms-module/telegram
