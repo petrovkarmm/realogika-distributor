@@ -3,9 +3,9 @@ import aiohttp
 from telegram_bot.settings import api_url
 
 
-async def get_all_items_from_shop():
+async def get_all_items_from_shop(user_id: int):
     async with aiohttp.ClientSession() as session:
-        url = f'{api_url}/items'
+        url = f'{api_url}/items?user_external_id={user_id}'
         async with session.get(url) as response:
             return await response.json()
 

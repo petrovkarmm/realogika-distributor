@@ -3,7 +3,7 @@ from typing import Any
 
 from aiogram import F, Bot
 from aiogram.fsm.context import FSMContext
-from aiogram.types import CallbackQuery, LabeledPrice
+from aiogram.types import CallbackQuery, LabeledPrice, Chat
 from aiogram_dialog import Dialog, Window, DialogManager
 from aiogram_dialog.widgets.kbd import Button, ScrollingGroup, Column, Select, Back, Row
 from aiogram_dialog.widgets.media import DynamicMedia, StaticMedia
@@ -168,8 +168,8 @@ async def on_shop_item_selected(
     state_object = dialog_manager_middleware_object['state']
     state_object: FSMContext
 
-    # shop_item_detail_info = await get_item_from_shop(shop_item_id)
-    shop_item_detail_info = detail_item_test_data.get(int(shop_item_id))
+    shop_item_detail_info = await get_item_from_shop(shop_item_id)
+    # shop_item_detail_info = detail_item_test_data.get(int(shop_item_id))
 
     text_after_payment = shop_item_detail_info['offers'][0]['text_after_payment']
     url_image = shop_item_detail_info['offers'][0]['url_image']
@@ -193,9 +193,13 @@ async def on_shop_item_selected(
 
 async def shop_items_getter(**_kwargs):
     dialog_manager = _kwargs['dialog_manager']
+    event_chat = _kwargs['event_chat']
+    event_chat: Chat
+    user_id = event_chat.id
 
-    shop_items_object = await get_all_items_from_shop()
-    shop_items_object = test_data_list
+    shop_items_object = await get_all_items_from_shop(user_id)
+    pprint(shop_items_object)
+    # shop_items_object = test_data_list
 
     if shop_items_object:
         dialog_manager.dialog_data['flag'] = True
@@ -205,7 +209,7 @@ async def shop_items_getter(**_kwargs):
             [
                 ShopItem(id=item['id'], title=item['title'])
                 for item in shop_items_object
-                # if item['available'] раскомитить после добавления боля в бд
+                # if item['available'] раскомитить после добавления поля в бд
 
             ]
     }
