@@ -13,6 +13,7 @@ from routers.start_command.start_command_router import start_command_router
 from dotenv import load_dotenv, find_dotenv
 
 from telegram_bot.middlewares.user_status_checker_middleware import UserStatusCheckMessage, UserStatusCheckCallback
+from telegram_bot.routers.global_utils.shop_dialog.shop_dialog_fetchers import patch_change_payment_status
 from telegram_bot.routers.global_utils.shop_dialog.shop_dialog_router import shop_dialog_router
 from telegram_bot.routers.global_utils.shop_dialog.shop_dialog_states import ShopDialog
 from telegram_bot.routers.global_utils.global_handler import global_handlers_router
@@ -103,16 +104,8 @@ async def bot_start():
                 except KeyError:
                     pass
                 else:
-                    current_shop_item_id = state_data['current_shop_item_id']
                     current_payload = state_data['current_payload']
-                    user_telegram_id = message.from_user.id
-
-                    await message.answer(
-                        text='Testing user_id and shop_item_id:\n'
-                             f'User_id: {user_telegram_id}\n'
-                             f'Shop_item_id: {current_shop_item_id}\n'
-                             f'Payload: {current_payload}'
-                    )
+                    await patch_change_payment_status(current_payload)
 
                     await asyncio.sleep(1)
 
