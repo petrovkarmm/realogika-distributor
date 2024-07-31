@@ -13,7 +13,7 @@ from data_for_tests import test_data_list, detail_item_test_data
 from telegram_bot.routers.global_utils.func_utils import uuid_generation
 from telegram_bot.routers.global_utils.keyboards import close_invoice, ref_program_menu
 from telegram_bot.routers.global_utils.shop_dialog.shop_dialog_fetchers import get_all_items_from_shop, \
-    get_item_from_shop
+    get_item_from_shop, post_create_payment
 from telegram_bot.routers.global_utils.shop_dialog.shop_dialog_states import ShopDialog
 from telegram_bot.routers.global_utils.shop_dialog.shop_items_dataclass import ShopItem, SHOP_KEY
 from telegram_bot.routers.start_command.keyboards import ref_code_keyboard
@@ -82,6 +82,16 @@ async def send_invoice_click(
     await state_object.set_state(
         'on_invoice_payment'
     )
+
+    payment_data = {
+        "payload": payload,
+        "user_tg_id": callback_query.message.from_user.id,
+        "offer_id": current_shop_item_id,
+        "amount": current_shop_item_price
+    }
+
+    test_data = await post_create_payment(payment_data)
+    print(test_data)
 
     invoice_object = await bot_object.send_invoice(
         chat_id=current_chat_id,
