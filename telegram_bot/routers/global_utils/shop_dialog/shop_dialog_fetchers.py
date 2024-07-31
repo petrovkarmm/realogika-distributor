@@ -20,12 +20,12 @@ async def get_item_from_shop(item_id):
 async def post_create_payment(payment_data: dict):
     async with aiohttp.ClientSession() as session:
         url = f'{api_url}/payment'
-        async with session.post(url=url, data=payment_data) as response:
+        async with session.post(url=url, json=payment_data) as response:
             return await response.json()
 
 
 async def patch_change_payment_status(payment_id: str):
     async with aiohttp.ClientSession() as session:
         url = f'{api_url}/payment/{payment_id}'
-        async with session.post(url=url) as response:
+        async with session.patch(url=url) as response:
             return await response.json()
