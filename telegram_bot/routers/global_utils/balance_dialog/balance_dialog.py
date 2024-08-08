@@ -40,6 +40,8 @@ async def quit_from_balance(
 
     await dialog_manager.done()
 
+    # TODO
+
     # Нужно добавить функцию которая на основе current_state выдает нужную клаву.
 
     await state.set_state(
