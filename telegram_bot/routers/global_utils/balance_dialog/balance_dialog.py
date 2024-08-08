@@ -19,6 +19,16 @@ from telegram_bot.routers.global_utils.keyboards import ref_program_menu
 from telegram_bot.routers.start_command.keyboards import ref_code_keyboard
 
 
+async def tech_work(
+        cq: CallbackQuery,
+        button: Button,
+        dialog_manager: DialogManager
+):
+    await cq.answer(
+        text='Временно недоступно.'
+    )
+
+
 async def close_dialog(callback: CallbackQuery,
                        button: Button,
                        dialog_manager: DialogManager):
@@ -122,8 +132,11 @@ balance_menu_window = Window(
     SwitchTo(
         text=Const('Мои вознаграждения'), id='my_rewards', state=BalanceDialog.user_rewards
     ),
-    SwitchTo(
-        text=Const('Пополнения/Списания'), id='balance_movement', state=BalanceDialog.money_movement
+    # SwitchTo(
+    #     text=Const('Пополнения/Списания'), id='balance_movement', state=BalanceDialog.money_movement
+    # ),
+    Button(
+        text=Const("Пополнения/Списания"), id="tech_work", on_click=tech_work
     ),
     Button(
         text=Const("Выйти"), id="back_to_menu", on_click=quit_from_balance
