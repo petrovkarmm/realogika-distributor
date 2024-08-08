@@ -8,7 +8,8 @@ from aiogram.types import Message
 from aiogram_dialog import DialogManager
 
 from telegram_bot.routers.global_utils.balance_dialog.balance_dialog_states import BalanceDialog
-from telegram_bot.routers.global_utils.global_fetchers import get_my_sponsor_data, get_my_sponsored_users_data
+from telegram_bot.routers.global_utils.global_fetchers import get_my_sponsor_data, get_my_sponsored_users_data, \
+    get_user_data
 from telegram_bot.routers.global_utils.keyboards import ref_program_menu
 from telegram_bot.routers.global_utils.shop_dialog.shop_dialog_states import ShopDialog
 
@@ -80,7 +81,10 @@ async def ref_program_menu_handler(message: Message, state: FSMContext):
         'ref_program_menu'
     )
 
-    sponsor_data = await get_my_sponsor_data(message.from_user.id)
+    user_account_data = await get_user_data(message.from_user.id)
+    user_account_id = user_account_data['account']['id']
+
+    sponsor_data = await get_my_sponsor_data(user_account_id)
     if sponsor_data:
         sponsor_name = sponsor_data[0]['sponsor']['first_name'] or 'отсутствует.'
         sponsor_last_name = sponsor_data[0]['sponsor']['last_name'] or 'отсутствует.'
@@ -123,11 +127,14 @@ async def open_balance_dialog_handler(message: Message, state: FSMContext, dialo
 
 @global_handlers_router.message(StateFilter('ref_program_menu'), F.text == 'Моя структура')
 async def open_my_arch_handler(message: Message, state: FSMContext):
-    # TODO сделать проверку на юзера.
-    sponsored_users_data = await get_my_sponsored_users_data(message.from_user.id)
+    user_account_data = await get_user_data(message.from_user.id)
+    user_account_id = user_account_data['account']['id']
+
+    sponsored_users_data = await get_my_sponsored_users_data(user_account_id)
 
     if sponsored_users_data:
-        sponsored_users_result_answer = 'Ваша структура:\n\n'
+        sponsored_users_result_answer = ('Ваша структура:\n\n'
+                                         '----------------')
 
         for sponsored_user in sponsored_users_data:
             sponsored_user_object = sponsored_user['user']
@@ -136,8 +143,8 @@ async def open_my_arch_handler(message: Message, state: FSMContext):
                 sponsored_user_link = f'https://t.me/{sponsored_user_object["users"][0]["username"]}'
             else:
                 sponsored_user_link = 'отсутствует.'
-            sponsored_users_result_answer += (f'Имя - {sponsored_user_first_name}\n'
-                                              f'Ссылка - {sponsored_user_link}\n\n | | | | | | | | | |')
+            sponsored_users_result_answer += (f'\nИмя - {sponsored_user_first_name}\n'
+                                              f'Ссылка - {sponsored_user_link}\n----------------')
         await message.answer(
             text=sponsored_users_result_answer,
             reply_markup=ref_program_menu()
