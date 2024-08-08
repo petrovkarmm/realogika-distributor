@@ -143,7 +143,7 @@ async def open_my_arch_handler(message: Message, state: FSMContext):
             sponsored_user_object = sponsored_user['user']
             sponsored_user_first_name = sponsored_user_object['first_name'] or 'отсутствует.'
             if sponsored_user_object['users'][0]['username']:
-                sponsored_user_link = f'https://t.me/{sponsored_user_object["users"][0]["username"]}'
+                sponsored_user_link = f'@{sponsored_user_object["users"][0]["username"]}'
             else:
                 sponsored_user_link = 'отсутствует.'
             sponsored_users_result_answer += (f'\nИмя - {sponsored_user_first_name}\n'
