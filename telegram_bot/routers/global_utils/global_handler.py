@@ -1,4 +1,5 @@
 import asyncio
+from pprint import pprint
 
 from aiogram import Router, F, types
 from aiogram.filters import StateFilter
@@ -7,6 +8,7 @@ from aiogram.types import Message
 from aiogram_dialog import DialogManager
 
 from telegram_bot.routers.global_utils.balance_dialog.balance_dialog_states import BalanceDialog
+from telegram_bot.routers.global_utils.global_fetchers import get_my_sponsor_data, get_my_sponsored_users_data
 from telegram_bot.routers.global_utils.keyboards import ref_program_menu
 from telegram_bot.routers.global_utils.shop_dialog.shop_dialog_states import ShopDialog
 
@@ -77,12 +79,26 @@ async def ref_program_menu_handler(message: Message, state: FSMContext):
     await state.set_state(
         'ref_program_menu'
     )
-    await message.answer(
-        text='Спонсор - такой-то.\n'
-             'Ссылка на телеграм - такая-то(при наличии)\n'
-             'Имя такое-то.',
-        reply_markup=ref_program_menu()
-    )
+
+    sponsor_data = await get_my_sponsor_data(message.from_user.id)
+    if sponsor_data:
+        sponsor_name = sponsor_data[0]['sponsor']['first_name'] or 'отсутствует.'
+        sponsor_last_name = sponsor_data[0]['sponsor']['last_name'] or 'отсутствует.'
+        sponsor_email = sponsor_data[0]['sponsor']['email'] or 'отсутствует.'
+
+        await message.answer(
+            text='Данные вашего спонсора:\n\n'
+                 f'Имя - {sponsor_name}\n'
+                 f'Фамилия - {sponsor_last_name}\n'
+                 f'Email - {sponsor_email}',
+            reply_markup=ref_program_menu()
+        )
+
+    else:
+        await message.answer(
+            text='У вас отсутствует спонсор.',
+            reply_markup=ref_program_menu()
+        ),
 
 
 @global_handlers_router.message(StateFilter('ref_program_menu'), F.text == 'Баланс')
@@ -107,7 +123,30 @@ async def open_balance_dialog_handler(message: Message, state: FSMContext, dialo
 
 @global_handlers_router.message(StateFilter('ref_program_menu'), F.text == 'Моя структура')
 async def open_my_arch_handler(message: Message, state: FSMContext):
-    pass
+    # TODO сделать проверку на юзера.
+    sponsored_users_data = await get_my_sponsored_users_data(message.from_user.id)
+
+    if sponsored_users_data:
+        sponsored_users_result_answer = 'Ваша структура:\n\n'
+
+        for sponsored_user in sponsored_users_data:
+            sponsored_user_object = sponsored_user['user']
+            sponsored_user_first_name = sponsored_user_object['first_name'] or 'отсутствует.'
+            if sponsored_user_object['users'][0]['username']:
+                sponsored_user_link = f'https://t.me/{sponsored_user_object["users"][0]["username"]}'
+            else:
+                sponsored_user_link = 'отсутствует.'
+            sponsored_users_result_answer += (f'Имя - {sponsored_user_first_name}\n'
+                                              f'Ссылка - {sponsored_user_link}\n\n | | | | | | | | | |')
+        await message.answer(
+            text=sponsored_users_result_answer,
+            reply_markup=ref_program_menu()
+        )
+    else:
+        await message.answer(
+            text='У вас отсутствует спонсор.',
+            reply_markup=ref_program_menu()
+        )
 
 
 @global_handlers_router.message(StateFilter('ref_program_menu'), F.text == 'Моя реф. ссылка')
