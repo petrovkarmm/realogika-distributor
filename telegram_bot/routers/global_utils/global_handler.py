@@ -114,14 +114,17 @@ async def open_balance_dialog_handler(message: Message, state: FSMContext, dialo
     :param dialog_manager:
     :return:
     """
+    user_account_data = await get_user_data(message.from_user.id)
+    user_account_id = user_account_data['account']['id']
 
     await message.answer(
-        text='Выберите интересующее пополнение/списание:',
+        text='Выберите интересующий тип движения:',
         reply_markup=types.ReplyKeyboardRemove()
     )
 
     await dialog_manager.start(
-        state=BalanceDialog.balance_dialog_menu
+        state=BalanceDialog.balance_dialog_menu,
+        data=user_account_id
     )
 
 
