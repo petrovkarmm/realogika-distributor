@@ -1,16 +1,20 @@
+from pprint import pprint
 from typing import Any
 
 from aiogram import F
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery
 from aiogram_dialog import Dialog, Window, DialogManager
-from aiogram_dialog.widgets.kbd import Button, ScrollingGroup, Column, Select, Back
+from aiogram_dialog.widgets.kbd import Button, ScrollingGroup, Column, Select, Back, SwitchTo
 from aiogram_dialog.widgets.text import Const, Format
 
-from telegram_bot.routers.global_utils.balance_dialog.balance_dataclass import BalanceMovement, BALANCE_KEY
+from telegram_bot.routers.global_utils.balance_dialog.balance_dataclass import RewardMovement, REWARD_KEY
+from telegram_bot.routers.global_utils.balance_dialog.balance_dialog_fetchers import get_all_user_rewards, \
+    get_user_reward
 from telegram_bot.routers.global_utils.balance_dialog.balance_dialog_states import BalanceDialog
 from data_for_tests import test_user_balance_movement_data, \
     test_full_balance_movement_info
+from telegram_bot.routers.global_utils.balance_dialog.utils import convert_datetime
 from telegram_bot.routers.global_utils.keyboards import ref_program_menu
 from telegram_bot.routers.start_command.keyboards import ref_code_keyboard
 
@@ -25,8 +29,8 @@ async def close_dialog(callback: CallbackQuery,
         pass
 
 
-def balance_movement_id_getter(balance_movement: BalanceMovement) -> int:
-    return balance_movement.id
+def reward_movement_id_getter(reward_movement: RewardMovement) -> int:
+    return reward_movement.id
 
 
 async def quit_from_balance(
@@ -53,86 +57,119 @@ async def quit_from_balance(
     )
 
 
-async def on_balance_movement_selected(
+async def on_reward_movement_selected(
         callback: CallbackQuery,
         widget: Any,
         dialog_manager: DialogManager,
-        balance_movement_id: int,
+        reward_id_selected: int,
 ):
-    user_balance_movement_detail = test_full_balance_movement_info[int(balance_movement_id)]
-    dialog_manager.dialog_data['amount'] = user_balance_movement_detail['amount']
-    dialog_manager.dialog_data['is_accrual'] = user_balance_movement_detail['is_accrual']
-    dialog_manager.dialog_data['date'] = user_balance_movement_detail['date']
-    dialog_manager.dialog_data['info'] = user_balance_movement_detail['info']
+    reward_detail = await get_user_reward(reward_id_selected)
+    dialog_manager.dialog_data['amount'] = reward_detail['amount']
+    dialog_manager.dialog_data['comment'] = reward_detail['comment']
+    dialog_manager.dialog_data['reward_date'] = convert_datetime(reward_detail['created_at'])
+    dialog_manager.dialog_data['coefficient'] = reward_detail['koeff']
+    dialog_manager.dialog_data['payment_date'] = convert_datetime(reward_detail['payment']['created_at'])
+    dialog_manager.dialog_data['payment_amount'] = reward_detail['payment']['amount']
 
     await dialog_manager.switch_to(
-        BalanceDialog.balance_movement_detail
+        BalanceDialog.reward_detail
     )
+
+
+async def user_balance_getter(**_kwargs):
+    dialog_manager = _kwargs['dialog_manager']
+    dialog_manager: DialogManager
+
+    user_account_id = dialog_manager.start_data
+    user_rewards_data = await get_all_user_rewards(user_account_id)
+
+    if user_rewards_data:
+
+        all_replenishments = 0
+
+        for reward in user_rewards_data:
+            all_replenishments += reward['amount']
+
+        return {'all_replenishments': all_replenishments}
+
+    else:
+        return {'all_replenishments': 0}
 
 
 async def user_balance_movement_getter(**_kwargs):
     dialog_manager = _kwargs['dialog_manager']
+    dialog_manager: DialogManager
 
-    dialog_manager.dialog_data['current_balance'] = 12346
-    dialog_manager.dialog_data['all_replenishments'] = 100000
-    dialog_manager.dialog_data['all_write_offs'] = 20000
+    user_account_id = dialog_manager.start_data
+    user_rewards_data = await get_all_user_rewards(user_account_id)
 
     return {
-        BALANCE_KEY:
+        REWARD_KEY:
             [
-                BalanceMovement(balance_movement['id'],
-                                BalanceMovement.format_amount(balance_movement['amount'],
-                                                              balance_movement['is_accrual']))
-                for balance_movement in test_user_balance_movement_data
+                RewardMovement(reward['id'],
+                               RewardMovement.format_amount(reward['amount']))
+                for reward in user_rewards_data
             ]
     }
 
 
 balance_menu_window = Window(
-    Const(
-        "У вас отсутствую движения по балансу.",
-        when=~F['dialog_data']
-    ),
     Format(
-        "Текущий баланс: {dialog_data[current_balance]}"
-        "\nВсего заработано: {dialog_data[all_replenishments]}"
-        "\nВсего выведено: {dialog_data[all_write_offs]}",
-        when=F['dialog_data']
+        # "Текущий баланс: {dialog_data[current_balance]}"
+        "\nВсего заработано: {all_replenishments} руб.",
+        # "\nВсего выведено: {dialog_data[all_write_offs]}",
+    ),
+    SwitchTo(
+        text=Const('Мои вознаграждения'), id='my_rewards', state=BalanceDialog.user_rewards
+    ),
+    SwitchTo(
+        text=Const('Пополнения/Списания'), id='balance_movement', state=BalanceDialog.money_movement
+    ),
+    Button(
+        text=Const("Выйти"), id="back_to_menu", on_click=quit_from_balance
+    ),
+    state=BalanceDialog.balance_dialog_menu,
+    getter=user_balance_getter
+)
+
+user_rewards_menu = Window(
+    Format(
+        "Выберите интересующее вознаграждение:"
     ),
     ScrollingGroup(
         Column(
             Select(
                 text=Format("{item.amount}"),
-                id="task_select",
-                items=BALANCE_KEY,
-                item_id_getter=balance_movement_id_getter,
-                on_click=on_balance_movement_selected,
+                id="rewards_group",
+                items=REWARD_KEY,
+                item_id_getter=reward_movement_id_getter,
+                on_click=on_reward_movement_selected,
+
             ),
         ),
         width=1,
         height=5,
         id="scroll_executors_menu",
-        when=F['dialog_data']
+        hide_on_single_page=True
+    ),
+    SwitchTo(
+        text=Const('Назад'), id='back_to_balance', state=BalanceDialog.user_rewards
     ),
     Button(
         text=Const("Выйти"), id="back_to_menu", on_click=quit_from_balance
     ),
     getter=user_balance_movement_getter,
-    state=BalanceDialog.balance_dialog_menu
+    state=BalanceDialog.user_rewards
 )
 
-balance_movement_detail_window = Window(
+reward_detail_window = Window(
     Format(
-        "Сумма пополнения:  +{dialog_data[amount]}руб."
-        "\nДата пополнения: {dialog_data[date]}"
-        "\nИнформация: {dialog_data[info]}",
-        when=F['dialog_data']['is_accrual']
-    ),
-    Format(
-        "Сумма списания:  -{dialog_data[amount]}руб."
-        "\nДата списания: {dialog_data[date]}"
-        "\nИнформация: {dialog_data[info]}",
-        when=~F['dialog_data']['is_accrual']
+        "Сумма вознаграждения: +{dialog_data[amount]} руб.\n"
+        "Дата получения вознаграждения: {dialog_data[reward_date]}\n"
+        "Ваш коэффициент: {dialog_data[coefficient]}\n"
+        "Комментарий: {dialog_data[comment]}\n\n"
+        "Сумма покупки: {dialog_data[payment_amount]} руб.\n"
+        "Дата покупки: {dialog_data[payment_date]}\n"
     ),
     Button(
         text=Const("Назад"), id="back", on_click=Back()
@@ -140,10 +177,11 @@ balance_movement_detail_window = Window(
     Button(
         text=Const("Выйти"), id="back_to_menu", on_click=quit_from_balance
     ),
-    state=BalanceDialog.balance_movement_detail
+    state=BalanceDialog.reward_detail
 )
 
 balance_dialog = Dialog(
     balance_menu_window,
-    balance_movement_detail_window
+    reward_detail_window,
+    user_rewards_menu
 )
