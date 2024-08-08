@@ -51,6 +51,8 @@ async def send_invoice_click(
     current_shop_item_price = dialog_manager.dialog_data['price'] * 100
     current_shop_item_id = dialog_manager.dialog_data['id']
 
+    # TODO
+
     current_shop_item_price = 10000  # ДЛЯ ТЕСТОВ ПОТОМ УБРАТЬ!
 
     prices = [
@@ -141,6 +143,8 @@ async def quit_from_shop(
     state = middleware_data['state']
     state: FSMContext
 
+    # TODO
+
     # current_state = dialog_manager.start_data['current_state']
 
     await dialog_manager.done()
@@ -198,7 +202,6 @@ async def shop_items_getter(**_kwargs):
     user_id = event_chat.id
 
     shop_items_object = await get_all_items_from_shop(user_id)
-    pprint(shop_items_object)
     # shop_items_object = test_data_list
 
     if shop_items_object:
