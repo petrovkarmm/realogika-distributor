@@ -6,6 +6,7 @@ from aiogram.types import Message
 from telegram_bot.routers.global_utils.func_utils import split_name_id_promocode
 from telegram_bot.routers.start_command.keyboards import ref_code_no_roles_keyboard, ref_code_keyboard, \
     only_ref_program_keyboard
+from telegram_bot.routers.start_command.start_command_fetchers import patch_user_promocode
 
 start_command_router = Router()
 
@@ -15,17 +16,23 @@ async def getting_start_with_new_users(message: Message, state: FSMContext, comm
     command_args = command.args
 
     if command_args:
-        promocode_id, promocode_name = await split_name_id_promocode(command_args)
+        status_code, promocode_patch_response = await patch_user_promocode(promocode_name=command_args,
+                                                                           telegram_user_id=message.from_user.id)
 
-        if promocode_id and promocode_name:
-            print('два значения')
+        print(promocode_patch_response)
+        print(status_code)
+        #  404 промокод не найден, 422 промокод уже активирован
+        try:
+            promocode_patch_response['id']
+        except KeyError:
+            await message.answer(
+                text=f'{promocode_patch_response["detail"]}'
+            )
         else:
-            print('что-то не то.')
-
-        await message.answer(
-            text='Промокод успешно применён!',
-            reply_markup=only_ref_program_keyboard()
-        )
+            await message.answer(
+                text='Промокод успешно применён!',
+                reply_markup=only_ref_program_keyboard()
+            )
     else:
         await message.answer(
             text='Добро пожаловать в бота дистрибьютора Релогики!\n'
