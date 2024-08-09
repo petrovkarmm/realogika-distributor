@@ -162,11 +162,14 @@ async def open_my_arch_handler(message: Message, state: FSMContext):
 @global_handlers_router.message(StateFilter('ref_program_menu'), F.text == 'Моя реф. ссылка')
 async def open_my_ref_link(message: Message, state: FSMContext):
     user_promocode_data = await get_user_promocode(message.from_user.id)
+    ref_link_id = user_promocode_data['id']
+    ref_link_name = user_promocode_data['name']
 
-    # TODO user_promocode_data_parsing
+    ref_link = f'https://t.me/aXEDQ90erbi_bot?start={ref_link_id}_{ref_link_name}'
 
     await message.answer(
-        text='Ваша ссылка: {bot_link}'
+        text='Ваша реферальная ссылка: \n'
+             f'{ref_link}'
     )
 
 

@@ -26,6 +26,6 @@ async def get_user_data(user_id: int):
 
 async def get_user_promocode(user_id: int):
     async with aiohttp.ClientSession() as session:
-        url = f'{api_url}/promocode/'
+        url = f'{api_url}/promocode/simple/{user_id}'
         async with session.get(url) as response:
             return await response.json()
