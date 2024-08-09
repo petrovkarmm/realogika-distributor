@@ -15,31 +15,13 @@ async def getting_start_with_new_users(message: Message, state: FSMContext, comm
 
     if command_args:
         await message.answer(
-            text='Проверка ссылки'
+            text='Промокод успешно применён!',
+            reply_markup=only_ref_program_keyboard()
         )
-        # В данном месте проводим проверку промокода
-        request = 'реф промокод'
-        if request == 'реф промокод':
-            await state.set_state(
-                'ref_program_menu'
-            )
-            await message.answer(
-                text='Переход по реферальному промо',
-                reply_markup=ref_code_keyboard()
-            )
-        elif request == 'реф промокод + нет роли':
-            await message.answer(
-                text='Чтобы воспользоваться ботом, вам необходимо купить доступ в магазине.',
-                reply_markup=ref_code_no_roles_keyboard()
-            )
-            await state.set_state(
-                'ref_code_no_roles'
-            )
     else:
         await message.answer(
             text='Добро пожаловать в бота дистрибьютора Релогики!\n'
                  'Чтобы воспользоваться ботом необходимо использовать ссылку приглашение.',
-            reply_markup=only_ref_program_keyboard()
         )
 
 
