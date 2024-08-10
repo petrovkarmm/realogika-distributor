@@ -19,14 +19,13 @@ async def getting_start_with_new_users(message: Message, state: FSMContext, comm
         status_code, promocode_patch_response = await patch_user_promocode(promocode_name=command_args,
                                                                            telegram_user_id=message.from_user.id)
 
-        print(promocode_patch_response)
-        print(status_code)
-        #  404 промокод не найден, 422 промокод уже активирован
-        try:
-            promocode_patch_response['id']
-        except KeyError:
+        if status_code == 404:
             await message.answer(
-                text=f'{promocode_patch_response["detail"]}'
+                text='Промокод не найден.'
+            )
+        elif status_code == 422:
+            await message.answer(
+                text='За вами уже закреплен промокод.'
             )
         else:
             await message.answer(
