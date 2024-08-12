@@ -8,6 +8,7 @@ from aiogram.types import Message
 from aiogram_dialog import DialogManager
 
 from telegram_bot.routers.global_utils.balance_dialog.balance_dialog_states import BalanceDialog
+from telegram_bot.routers.global_utils.balance_dialog.utils import convert_datetime
 from telegram_bot.routers.global_utils.global_fetchers import get_my_sponsor_data, get_my_sponsored_users_data, \
     get_user_data, get_user_promocode
 from telegram_bot.routers.global_utils.keyboards import ref_program_menu
@@ -90,8 +91,14 @@ async def ref_program_menu_handler(message: Message, state: FSMContext):
         sponsor_last_name = sponsor_data[0]['sponsor']['last_name'] or 'отсутствует.'
         sponsor_email = sponsor_data[0]['sponsor']['email'] or 'отсутствует.'
 
+        promocode_data = user_account_data['promocodes'][0]
+        promocode_data_end_date = promocode_data['end_at']
+        promocode_data_end_date_convert = convert_datetime(promocode_data_end_date)
+
         await message.answer(
-            text='Данные вашего спонсора:\n\n'
+            text='Дата окончания промокода:\n\n'
+                 f'{promocode_data_end_date_convert}\n\n'
+                 'Данные вашего спонсора:\n\n'
                  f'Имя - {sponsor_name}\n'
                  f'Фамилия - {sponsor_last_name}\n'
                  f'Email - {sponsor_email}',
