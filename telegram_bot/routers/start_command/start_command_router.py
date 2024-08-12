@@ -19,7 +19,20 @@ async def getting_start_with_new_users(message: Message, state: FSMContext, comm
         status_code, promocode_patch_response = await patch_user_promocode(promocode_name=command_args,
                                                                            telegram_user_id=message.from_user.id)
 
-        if status_code == 404:
+        if status_code == 200:
+            promocode_data = promocode_patch_response['promocodes'][0]
+            promocode_offer_id = promocode_data['offer_id']
+            if promocode_offer_id:
+                # логика перехода в магазин.
+                pass
+            await state.set_state(
+                'ref_program_menu'
+            )
+            await message.answer(
+                text='Промокод успешно применён!',
+                reply_markup=only_ref_program_keyboard()
+            )
+        elif status_code == 404:
             await message.answer(
                 text='Промокод не найден.'
             )
@@ -32,12 +45,9 @@ async def getting_start_with_new_users(message: Message, state: FSMContext, comm
                 reply_markup=only_ref_program_keyboard()
             )
         else:
-            await state.set_state(
-                'ref_program_menu'
-            )
             await message.answer(
-                text='Промокод успешно применён!',
-                reply_markup=only_ref_program_keyboard()
+                text='На сервере технические неполадки.\n'
+                     'Пожалуйста, повторите позже.'
             )
     else:
         await message.answer(

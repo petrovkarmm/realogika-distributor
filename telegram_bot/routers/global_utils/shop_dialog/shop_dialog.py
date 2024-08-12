@@ -33,6 +33,49 @@ def shop_item_id_getter(shop_item: ShopItem) -> int:
     return shop_item.id
 
 
+async def promo_item_data_getter(**_kwargs):
+    dialog_manager = _kwargs['dialog_manager']
+    dialog_manager: DialogManager
+    dialog_manager_middleware_object = dialog_manager.middleware_data
+
+    state_object = dialog_manager_middleware_object['state']
+    state_object: FSMContext
+
+    shop_item_id = dialog_manager.start_data
+
+    shop_item_detail_info = await get_item_from_shop(shop_item_id)
+    # shop_item_detail_info = detail_item_test_data.get(int(shop_item_id))
+
+    text_after_payment = shop_item_detail_info['offers'][0]['text_after_payment']
+    url_image = shop_item_detail_info['offers'][0]['url_image']
+    if not url_image:
+        url_image = 'https://th.bing.com/th/id/OIP.Nskk7OgDwsE73BbF1kYVLwAAAA?rs=1&pid=ImgDetMain'
+
+    promo_item_title = shop_item_detail_info['title']
+    promo_item_id = shop_item_detail_info['id']
+    promo_item_price = shop_item_detail_info['offers'][0]['price']
+    promo_item_url_image = url_image
+    promo_item_description = shop_item_detail_info['offers'][0]['description']
+
+    dialog_manager.dialog_data['title'] = promo_item_title
+    dialog_manager.dialog_data['id'] = promo_item_id
+    dialog_manager.dialog_data['price'] = promo_item_price
+    dialog_manager.dialog_data['url_image'] = promo_item_url_image
+    dialog_manager.dialog_data['description'] = promo_item_description
+
+    await state_object.update_data(
+        text_after_payment=text_after_payment
+    )
+
+    return {
+        'promo_item_title': promo_item_title,
+        'promo_item_id': promo_item_id,
+        'promo_item_price': promo_item_price,
+        'promo_item_url_image': promo_item_url_image,
+        'promo_item_description': promo_item_description
+    }
+
+
 async def send_invoice_click(
         callback_query: CallbackQuery,
         button: Button,
