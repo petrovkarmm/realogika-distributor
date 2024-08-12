@@ -24,10 +24,17 @@ async def getting_start_with_new_users(message: Message, state: FSMContext, comm
                 text='Промокод не найден.'
             )
         elif status_code == 422:
+            await state.set_state(
+                'ref_program_menu'
+            )
             await message.answer(
-                text='За вами уже закреплен промокод.'
+                text='За вами уже закреплен промокод.',
+                reply_markup=only_ref_program_keyboard()
             )
         else:
+            await state.set_state(
+                'ref_program_menu'
+            )
             await message.answer(
                 text='Промокод успешно применён!',
                 reply_markup=only_ref_program_keyboard()

@@ -184,8 +184,8 @@ reward_detail_window = Window(
         "Сумма покупки: {dialog_data[payment_amount]} руб.\n"
         "Дата покупки: {dialog_data[payment_date]}\n"
     ),
-    Button(
-        text=Const("Назад"), id="back", on_click=Back()
+    SwitchTo(
+        text=Const("Назад"), id="back", state=BalanceDialog.user_rewards
     ),
     Button(
         text=Const("Выйти"), id="back_to_menu", on_click=quit_from_balance
