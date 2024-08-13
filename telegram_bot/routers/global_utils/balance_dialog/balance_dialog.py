@@ -166,7 +166,7 @@ user_rewards_menu = Window(
         hide_on_single_page=True
     ),
     SwitchTo(
-        text=Const('Назад'), id='back_to_balance', state=BalanceDialog.user_rewards
+        text=Const('Назад'), id='back_to_balance', state=BalanceDialog.balance_dialog_menu
     ),
     Button(
         text=Const("Выйти"), id="back_to_menu", on_click=quit_from_balance

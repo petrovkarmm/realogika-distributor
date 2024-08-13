@@ -80,6 +80,10 @@ async def bot_start():
         except KeyError:
             current_state = await state.get_state()
 
+            await state.set_state(
+                'ref_program_menu'
+            )
+
             await asyncio.sleep(1)
 
             await message.answer(
@@ -102,10 +106,37 @@ async def bot_start():
                 try:
                     text_after_payment = state_data['text_after_payment']
                 except KeyError:
-                    pass
-                else:
+                    await state.set_state(
+                        'ref_program_menu'
+                    )
                     current_payload = state_data['current_payload']
                     await patch_change_payment_status(current_payload)
+
+                    await asyncio.sleep(1)
+
+                    current_state = await state.get_state()
+
+                    await asyncio.sleep(1)
+
+                    await message.answer(
+                        text='Добро пожаловать в магазин.',
+                        reply_markup=types.ReplyKeyboardRemove()
+                    )
+
+                    await asyncio.sleep(1)
+
+                    await dialog_manager.start(
+                        state=ShopDialog.shop_dialog_menu,
+                        data=current_state
+                    )
+                else:
+                    await state.set_state(
+                        'ref_program_menu'
+                    )
+                    current_payload = state_data['current_payload']
+                    payment_status = await patch_change_payment_status(current_payload)
+                    print('Дата пеймент статуса после оплаты')
+                    print(payment_status)
 
                     await asyncio.sleep(1)
 
@@ -155,6 +186,11 @@ async def bot_start():
 
     @dp.message(F.text == 'ping')
     async def test_handler_on_ping(message: Message, state: FSMContext):
+        current_state = await state.get_state()
+        await message.answer(
+            text=str(current_state)
+        )
+
         await message.answer(
             text='PONG'
         )

@@ -124,10 +124,13 @@ async def send_invoice_click(
 
     payment_data = {
         "payload": payload,
-        "user_tg_id": callback_query.message.from_user.id,
+        "user_tg_id": current_chat_id,
         "offer_id": current_shop_item_id,
         "amount": current_shop_item_price
     }
+
+    print('Дата создания пейлоада')
+    pprint(payment_data)
 
     await post_create_payment(payment_data)
 
@@ -297,7 +300,7 @@ promo_item_detail_window = Window(
         "Описание: {promo_item_description}"
     ),
     Button(
-      text=Format('Купить'), id='go_to_buy_item', on_click=go_to_item_buy_accepting
+        text=Format('Купить'), id='go_to_buy_item', on_click=go_to_item_buy_accepting
     ),
     StaticMedia(
         url=Format('promo_item_url_image')
@@ -307,7 +310,7 @@ promo_item_detail_window = Window(
             text=Const('В магазин'), id='to_shop', state=ShopDialog.shop_dialog_menu
         ),
         Button(
-            text=Const("Выйти"), id="quit_from_shop", on_click=quit_from_shop
+            text=Const("Выйти"), id="quit_from_shop_promo", on_click=quit_from_shop
         )
     ),
     state=ShopDialog.shop_promo_item_detail,
@@ -379,6 +382,7 @@ shop_item_buy_accepting_window = Window(
 
 shop_dialog = Dialog(
     shop_menu_window,
+    promo_item_detail_window,
     shop_item_detail_window,
     shop_item_buy_accepting_window
 )
