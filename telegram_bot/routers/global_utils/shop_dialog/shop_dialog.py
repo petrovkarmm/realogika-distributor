@@ -5,7 +5,7 @@ from aiogram import F, Bot
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, LabeledPrice, Chat
 from aiogram_dialog import Dialog, Window, DialogManager
-from aiogram_dialog.widgets.kbd import Button, ScrollingGroup, Column, Select, Back, Row
+from aiogram_dialog.widgets.kbd import Button, ScrollingGroup, Column, Select, Back, Row, SwitchTo
 from aiogram_dialog.widgets.media import DynamicMedia, StaticMedia
 from aiogram_dialog.widgets.text import Const, Format
 
@@ -291,6 +291,30 @@ shop_menu_window = Window(
     ),
     getter=shop_items_getter,
     state=ShopDialog.shop_dialog_menu
+)
+
+promo_item_detail_window = Window(
+    Format(
+        "Название товара: {promo_item_title}\n"
+        "Цена: {promo_item_price}\n"
+        "Описание: {promo_item_description}"
+    ),
+    Button(
+      text=Format('Купить'), id='go_to_buy_item', on_click=go_to_item_buy_accepting
+    ),
+    StaticMedia(
+        url=Format('promo_item_url_image')
+    ),
+    Row(
+        SwitchTo(
+            text=Const('В магазин'), id='to_shop', state=ShopDialog.shop_dialog_menu
+        ),
+        Button(
+            text=Const("Выйти"), id="quit_from_shop", on_click=quit_from_shop
+        )
+    ),
+    state=ShopDialog.shop_promo_item_detail,
+    getter=promo_item_data_getter
 )
 
 shop_item_detail_window = Window(
