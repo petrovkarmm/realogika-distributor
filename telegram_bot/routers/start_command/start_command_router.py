@@ -20,8 +20,20 @@ async def getting_start_with_new_users(message: Message, state: FSMContext, comm
     command_args = command.args
 
     if command_args:
+
+        sponsored_user_data = {
+            "external_id": f"{message.from_user.id}",
+            "username": f"{message.from_user.username}",
+            "fullname": f"{message.from_user.full_name}",
+            "account_data": {
+                "first_name": f"{message.from_user.first_name}",
+                "last_name": f"{message.from_user.last_name}",
+            }
+        }
+
         status_code, promocode_patch_response = await patch_user_promocode(promocode_name=command_args,
-                                                                           telegram_user_id=message.from_user.id)
+                                                                           telegram_user_id=message.from_user.id,
+                                                                           sponsored_user_data=sponsored_user_data)
 
         if status_code == 200:
             promocode_data = promocode_patch_response['promocodes'][0]
