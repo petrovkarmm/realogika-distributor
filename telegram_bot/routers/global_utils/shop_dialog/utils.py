@@ -21,14 +21,3 @@ def validate_image_url(item_url_image: str) -> str:
     except requests.RequestException:
         # В случае ошибки запроса возвращаем заглушку
         return fallback_image
-
-
-# Пример использования
-shop_item_detail_info = {
-    'offers': [
-        {'url_image': 'https://example.com/someimage.jpg'}
-    ]
-}
-
-# Присваиваем проверенный URL
-url_image = validate_image_url(shop_item_detail_info['offers'][0]['url_image'])
