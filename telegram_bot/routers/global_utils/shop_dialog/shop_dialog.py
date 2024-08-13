@@ -16,6 +16,7 @@ from telegram_bot.routers.global_utils.shop_dialog.shop_dialog_fetchers import g
     get_item_from_shop, post_create_payment
 from telegram_bot.routers.global_utils.shop_dialog.shop_dialog_states import ShopDialog
 from telegram_bot.routers.global_utils.shop_dialog.shop_items_dataclass import ShopItem, SHOP_KEY
+from telegram_bot.routers.global_utils.shop_dialog.utils import validate_image_url
 from telegram_bot.routers.start_command.keyboards import ref_code_keyboard
 
 
@@ -47,9 +48,7 @@ async def promo_item_data_getter(**_kwargs):
     # shop_item_detail_info = detail_item_test_data.get(int(shop_item_id))
 
     text_after_payment = shop_item_detail_info['offers'][0]['text_after_payment']
-    url_image = shop_item_detail_info['offers'][0]['url_image']
-    if not url_image:
-        url_image = 'https://th.bing.com/th/id/OIP.Nskk7OgDwsE73BbF1kYVLwAAAA?rs=1&pid=ImgDetMain'
+    url_image = validate_image_url(shop_item_detail_info['offers'][0]['url_image'])
 
     promo_item_title = shop_item_detail_info['title']
     promo_item_id = shop_item_detail_info['id']
@@ -219,9 +218,7 @@ async def on_shop_item_selected(
     # shop_item_detail_info = detail_item_test_data.get(int(shop_item_id))
 
     text_after_payment = shop_item_detail_info['offers'][0]['text_after_payment']
-    url_image = shop_item_detail_info['offers'][0]['url_image']
-    if not url_image:
-        url_image = 'https://th.bing.com/th/id/OIP.Nskk7OgDwsE73BbF1kYVLwAAAA?rs=1&pid=ImgDetMain'
+    url_image = validate_image_url(shop_item_detail_info['offers'][0]['url_image'])
 
     dialog_manager.dialog_data['title'] = shop_item_detail_info['title']
     dialog_manager.dialog_data['id'] = shop_item_detail_info['id']
