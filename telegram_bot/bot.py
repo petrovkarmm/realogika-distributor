@@ -184,9 +184,8 @@ async def bot_start():
 
     @dp.message(F.text == 'ping')
     async def test_handler_on_ping(message: Message, state: FSMContext):
-        current_state = await state.get_state()
         await message.answer(
-            text=str(current_state)
+            text=f'{message.from_user.full_name}'
         )
 
         await message.answer(
