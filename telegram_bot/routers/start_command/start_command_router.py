@@ -8,13 +8,15 @@ from telegram_bot.routers.global_utils.func_utils import split_name_id_promocode
 from telegram_bot.routers.global_utils.shop_dialog.shop_dialog_states import ShopDialog
 from telegram_bot.routers.start_command.keyboards import ref_code_no_roles_keyboard, ref_code_keyboard, \
     only_ref_program_keyboard
-from telegram_bot.routers.start_command.start_command_fetchers import patch_user_promocode, get_shop_item_id
+from telegram_bot.routers.start_command.start_command_fetchers import patch_user_promocode, get_shop_item_id, \
+    get_sponsor_user_data
 
 start_command_router = Router()
 
 
 @start_command_router.message(StateFilter(None), Command('start'))
-async def getting_start_with_new_users(message: Message, state: FSMContext, command: CommandObject, dialog_manager: DialogManager):
+async def getting_start_with_new_users(message: Message, state: FSMContext, command: CommandObject,
+                                       dialog_manager: DialogManager):
     command_args = command.args
 
     if command_args:
@@ -24,16 +26,29 @@ async def getting_start_with_new_users(message: Message, state: FSMContext, comm
         if status_code == 200:
             promocode_data = promocode_patch_response['promocodes'][0]
             sponsor_account_id = promocode_data['account_id']
+            sponsor_user_data = await get_sponsor_user_data(sponsor_account_id)
 
-            if promocode_offer_id:
-                offer_data = await get_shop_item_id(promocode_offer_id)
-                shop_product_id = offer_data['product_id']
-                print(shop_product_id)
+            sponsor_telegram_id = sponsor_user_data['users'][0]['external_id']
 
-                await dialog_manager.start(
-                    state=ShopDialog.shop_promo_item_detail,
-                    data=shop_product_id
+            sponsored_user_username = message.from_user.username
+            if sponsored_user_username:
+                sponsored_user_username = '@' + sponsored_user_username
+            else:
+                sponsored_user_username = 'Username отсутствует.'
+            sponsored_user_first_name = message.from_user.first_name or 'Имя отсутствует.'
+            sponsored_user_last_name = message.from_user.last_name or 'Фамилия отсутствует.'
+
+            try:
+                await message.bot.send_message(
+                    text=f'Поздравляем! У вас появился новый реферал!\n'
+                         f'Данные нового реферала:\n\n'
+                         f'{sponsored_user_username}\n'
+                         f'{sponsored_user_last_name}\n'
+                         f'{sponsored_user_first_name}',
+                    chat_id=sponsor_telegram_id
                 )
+            except Exception as e:
+                pass
 
             await state.set_state(
                 'ref_program_menu'

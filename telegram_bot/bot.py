@@ -135,8 +135,6 @@ async def bot_start():
                     )
                     current_payload = state_data['current_payload']
                     payment_status = await patch_change_payment_status(current_payload)
-                    print('Дата пеймент статуса после оплаты')
-                    print(payment_status)
 
                     await asyncio.sleep(1)
 

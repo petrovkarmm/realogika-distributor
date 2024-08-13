@@ -19,3 +19,10 @@ async def get_shop_item_id(offer_id: int):
         url = f'{api_url}/offers/{offer_id}'
         async with session.get(url) as response:
             return await response.json()
+
+
+async def get_sponsor_user_data(account_id: int):
+    async with aiohttp.ClientSession() as session:
+        url = f'{api_url}/user_accounts/{account_id}'
+        async with session.get(url) as response:
+            return await response.json()

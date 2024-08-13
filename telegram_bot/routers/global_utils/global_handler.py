@@ -174,6 +174,7 @@ async def open_my_arch_handler(message: Message, state: FSMContext):
 @global_handlers_router.message(StateFilter('ref_program_menu'), F.text == 'Моя реф. ссылка')
 async def open_my_ref_link(message: Message, state: FSMContext):
     user_promocode_data = await get_user_promocode(message.from_user.id)
+    pprint(user_promocode_data)
     try:
         ref_link_code = user_promocode_data[0]['code']
     except KeyError:
