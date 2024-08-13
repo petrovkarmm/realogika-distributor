@@ -135,7 +135,7 @@ async def open_balance_dialog_handler(message: Message, state: FSMContext, dialo
     )
 
 
-@global_handlers_router.message(StateFilter('ref_program_menu'), F.text == 'Моя структура')
+@global_handlers_router.message(StateFilter('ref_program_menu'), F.text == 'Мои рефералы')
 async def open_my_arch_handler(message: Message, state: FSMContext):
     user_account_data = await get_user_data(message.from_user.id)
     user_account_id = user_account_data['account']['id']
@@ -143,7 +143,7 @@ async def open_my_arch_handler(message: Message, state: FSMContext):
     sponsored_users_data = await get_my_sponsored_users_data(user_account_id)
 
     if sponsored_users_data:
-        sponsored_users_result_answer = ('Ваша структура:\n\n'
+        sponsored_users_result_answer = ('Ваши рефералы:\n\n'
                                          '----------------')
 
         for sponsored_user in sponsored_users_data:
