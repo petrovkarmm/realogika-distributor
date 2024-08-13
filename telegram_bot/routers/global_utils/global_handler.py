@@ -43,6 +43,11 @@ async def global_shop_handler(message: Message, state: FSMContext, dialog_manage
                                 F.text == 'Отменить покупку')
 async def cancel_payment(message: Message, state: FSMContext, dialog_manager: DialogManager):
     state_data = await state.get_data()
+
+    await state.set_state(
+        'ref_program_menu'
+    )
+
     try:
         invoice_object = state_data['invoice_object']
         invoice_object: Message
@@ -170,18 +175,15 @@ async def open_my_arch_handler(message: Message, state: FSMContext):
 async def open_my_ref_link(message: Message, state: FSMContext):
     user_promocode_data = await get_user_promocode(message.from_user.id)
     try:
-        ref_link_code = user_promocode_data['detail']
-    except TypeError:
-        result_message = ""
-        for promocode_data in user_promocode_data:
-            result_message += (f'{promocode_data["offer"]["product"]["title"]}\n'
-                               f'https://t.me/aXEDQ90erbi_bot?start={promocode_data["code"]}\n\n')
+        ref_link_code = user_promocode_data[0]['code']
+    except KeyError:
         await message.answer(
-            text=result_message
+            text=f'{user_promocode_data["detail"]}'
         )
     else:
         await message.answer(
-            text=f'{user_promocode_data["detail"]}'
+            text='Ваша реферальная ссылка:\n\n'
+                 f'https://t.me/aXEDQ90erbi_bot?start={ref_link_code}'
         )
 
 

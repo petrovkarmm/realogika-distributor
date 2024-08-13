@@ -23,9 +23,7 @@ async def getting_start_with_new_users(message: Message, state: FSMContext, comm
 
         if status_code == 200:
             promocode_data = promocode_patch_response['promocodes'][0]
-            promocode_offer_id = promocode_data['offer_id']
-
-            print(promocode_patch_response)
+            sponsor_account_id = promocode_data['account_id']
 
             if promocode_offer_id:
                 offer_data = await get_shop_item_id(promocode_offer_id)

@@ -34,47 +34,6 @@ def shop_item_id_getter(shop_item: ShopItem) -> int:
     return shop_item.id
 
 
-async def promo_item_data_getter(**_kwargs):
-    dialog_manager = _kwargs['dialog_manager']
-    dialog_manager: DialogManager
-    dialog_manager_middleware_object = dialog_manager.middleware_data
-
-    state_object = dialog_manager_middleware_object['state']
-    state_object: FSMContext
-
-    shop_item_id = dialog_manager.start_data
-
-    shop_item_detail_info = await get_item_from_shop(shop_item_id)
-    # shop_item_detail_info = detail_item_test_data.get(int(shop_item_id))
-
-    text_after_payment = shop_item_detail_info['offers'][0]['text_after_payment']
-    url_image = validate_image_url(shop_item_detail_info['offers'][0]['url_image'])
-
-    promo_item_title = shop_item_detail_info['title']
-    promo_item_id = shop_item_detail_info['id']
-    promo_item_price = shop_item_detail_info['offers'][0]['price']
-    promo_item_url_image = url_image
-    promo_item_description = shop_item_detail_info['offers'][0]['description']
-
-    dialog_manager.dialog_data['title'] = promo_item_title
-    dialog_manager.dialog_data['id'] = promo_item_id
-    dialog_manager.dialog_data['price'] = promo_item_price
-    dialog_manager.dialog_data['url_image'] = promo_item_url_image
-    dialog_manager.dialog_data['description'] = promo_item_description
-
-    await state_object.update_data(
-        text_after_payment=text_after_payment
-    )
-
-    return {
-        'promo_item_title': promo_item_title,
-        'promo_item_id': promo_item_id,
-        'promo_item_price': promo_item_price,
-        'promo_item_url_image': promo_item_url_image,
-        'promo_item_description': promo_item_description
-    }
-
-
 async def send_invoice_click(
         callback_query: CallbackQuery,
         button: Button,
@@ -95,7 +54,7 @@ async def send_invoice_click(
 
     # TODO
 
-    # current_shop_item_price = 10000  # ДЛЯ ТЕСТОВ ПОТОМ УБРАТЬ!
+    current_shop_item_price = 10000  # ДЛЯ ТЕСТОВ ПОТОМ УБРАТЬ!
 
     prices = [
         LabeledPrice(label="Цена", amount=current_shop_item_price),
@@ -128,9 +87,6 @@ async def send_invoice_click(
         "offer_id": current_shop_item_id,
         "amount": current_shop_item_price
     }
-
-    print('Дата создания пейлоада')
-    pprint(payment_data)
 
     await post_create_payment(payment_data)
 
@@ -293,30 +249,6 @@ shop_menu_window = Window(
     state=ShopDialog.shop_dialog_menu
 )
 
-promo_item_detail_window = Window(
-    Format(
-        "Название товара: {promo_item_title}\n"
-        "Цена: {promo_item_price}\n"
-        "Описание: {promo_item_description}"
-    ),
-    Button(
-        text=Format('Купить'), id='go_to_buy_item', on_click=go_to_item_buy_accepting
-    ),
-    StaticMedia(
-        url=Format('promo_item_url_image')
-    ),
-    Row(
-        SwitchTo(
-            text=Const('В магазин'), id='to_shop', state=ShopDialog.shop_dialog_menu
-        ),
-        Button(
-            text=Const("Выйти"), id="quit_from_shop_promo", on_click=quit_from_shop
-        )
-    ),
-    state=ShopDialog.shop_promo_item_detail,
-    getter=promo_item_data_getter
-)
-
 shop_item_detail_window = Window(
     Format(
         "Название товара: {dialog_data[title]}."
@@ -342,8 +274,8 @@ shop_item_detail_window = Window(
         url=Format('{dialog_data[url_image]}')
     ),
     Row(
-        Button(
-            text=Const("Назад"), id="back", on_click=Back()
+        SwitchTo(
+            text=Const("Назад"), id="back", state=ShopDialog.shop_dialog_menu
         ),
         Button(
             text=Const("Выйти"), id="quit_from_shop", on_click=quit_from_shop
@@ -370,8 +302,8 @@ shop_item_buy_accepting_window = Window(
         text=Const("Подтверждаю"), id='buy_item', on_click=send_invoice_click
     ),
     Row(
-        Button(
-            text=Const("Назад"), id="back", on_click=Back()
+        SwitchTo(
+            text=Const("Назад"), id="back", state=ShopDialog.shop_item_detail
         ),
         Button(
             text=Const("Выйти"), id="quit_from_shop", on_click=quit_from_shop
@@ -382,7 +314,6 @@ shop_item_buy_accepting_window = Window(
 
 shop_dialog = Dialog(
     shop_menu_window,
-    promo_item_detail_window,
     shop_item_detail_window,
     shop_item_buy_accepting_window
 )
