@@ -161,7 +161,7 @@ async def open_my_arch_handler(message: Message, state: FSMContext):
         )
     else:
         await message.answer(
-            text='У вас отсутствует спонсор.',
+            text='У вас отсутствуют рефералы.',
             reply_markup=ref_program_menu()
         )
 
