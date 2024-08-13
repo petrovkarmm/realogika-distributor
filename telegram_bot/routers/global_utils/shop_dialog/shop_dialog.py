@@ -95,7 +95,7 @@ async def send_invoice_click(
 
     # TODO
 
-    current_shop_item_price = 10000  # ДЛЯ ТЕСТОВ ПОТОМ УБРАТЬ!
+    # current_shop_item_price = 10000  # ДЛЯ ТЕСТОВ ПОТОМ УБРАТЬ!
 
     prices = [
         LabeledPrice(label="Цена", amount=current_shop_item_price),
