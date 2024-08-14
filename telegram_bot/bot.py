@@ -33,11 +33,11 @@ async def bot_start():
     #     filename=f'{BASE_DIR}/tg_logs/aiogram.log'
     # )
 
-    bot = Bot(token='7290803644:AAFd3v0SEeSdUxz7HzCOqcgXOMjxmfGt9RQ')
+    bot = Bot(token='7267561715:AAFk6_L2X3Mwp-mQFNUc7eCV6Dfvay8b88k')
 
     # redis_connect = os.getenv('REDIS_CONNECT_URL')
-    # storage = RedisStorage.from_url(redis_connect, key_builder=DefaultKeyBuilder(with_destiny=True))
 
+    # storage = RedisStorage.from_url(redis_connect, key_builder=DefaultKeyBuilder(with_destiny=True))
     # storage = RedisStorage.from_url('redis://localhost:6379/0', key_builder=DefaultKeyBuilder(with_destiny=True))
 
     # dp = Dispatcher(storage=storage)
