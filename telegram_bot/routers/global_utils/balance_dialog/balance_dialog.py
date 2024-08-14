@@ -136,7 +136,7 @@ balance_menu_window = Window(
     #     text=Const('Пополнения/Списания'), id='balance_movement', state=BalanceDialog.money_movement
     # ),
     Button(
-        text=Const("Вывод"), id="tech_work", on_click=tech_work
+        text=Const("Вывод вознаграждений"), id="tech_work", on_click=tech_work
     ),
     Button(
         text=Const("Выйти"), id="back_to_menu", on_click=quit_from_balance
