@@ -44,8 +44,7 @@ async def bot_start():
 
     dp = Dispatcher()
 
-    dp.message.middleware.register(UserStatusCheckMessage())
-    dp.callback_query.middleware.register(UserStatusCheckCallback())
+    # dp.message.middleware.register(UserStatusCheckMessage())
 
     setup_dialogs(dp)
 
