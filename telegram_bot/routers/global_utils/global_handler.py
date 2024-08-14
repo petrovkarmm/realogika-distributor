@@ -9,6 +9,7 @@ from aiogram_dialog import DialogManager
 
 from telegram_bot.routers.global_utils.balance_dialog.balance_dialog_states import BalanceDialog
 from telegram_bot.routers.global_utils.balance_dialog.utils import convert_datetime
+from telegram_bot.routers.global_utils.func_utils import send_ref_link_with_qr
 from telegram_bot.routers.global_utils.global_fetchers import get_my_sponsor_data, get_my_sponsored_users_data, \
     get_user_data, get_user_promocode
 from telegram_bot.routers.global_utils.keyboards import ref_program_menu
@@ -181,10 +182,8 @@ async def open_my_ref_link(message: Message, state: FSMContext):
             text=f'{user_promocode_data["detail"]}'
         )
     else:
-        await message.answer(
-            text='Ваша реферальная ссылка:\n\n'
-                 f'https://t.me/ReDister_bot?start={ref_link_code}'
-        )
+        ref_link = f'https://t.me/ReDister_bot?start={ref_link_code}'
+        await send_ref_link_with_qr(ref_link=ref_link, message=message)
 
 
 @global_handlers_router.message(StateFilter('ref_program_menu'), F.text)
