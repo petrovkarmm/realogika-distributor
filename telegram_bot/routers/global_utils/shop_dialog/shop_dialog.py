@@ -49,18 +49,19 @@ async def send_invoice_click(
 
     current_shop_item_name = dialog_manager.dialog_data['title']
     current_shop_item_description = dialog_manager.dialog_data['description']
-    current_shop_item_price = dialog_manager.dialog_data['price'] * 100
+    current_shop_item_price = dialog_manager.dialog_data['price']
     current_shop_item_id = dialog_manager.dialog_data['id']
 
     # TODO
 
-    current_shop_item_price = 10000  # ДЛЯ ТЕСТОВ ПОТОМ УБРАТЬ!
+    price_for_payload = current_shop_item_price * 100
+    price_for_payload = 10000
 
     prices = [
-        LabeledPrice(label="Цена", amount=current_shop_item_price),
+        LabeledPrice(label="Цена", amount=price_for_payload),
     ]
 
-    provider_token = '381764678:TEST:89271'
+    provider_token = '381764678:TEST:92362'
     currency = 'RUB'
     payload = await uuid_generation()
 
