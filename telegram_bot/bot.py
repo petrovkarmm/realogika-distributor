@@ -12,7 +12,7 @@ from routers.start_command.start_command_router import start_command_router
 
 from dotenv import load_dotenv, find_dotenv
 
-from telegram_bot.middlewares.user_status_checker_middleware import UserStatusCheckMessage, UserStatusCheckCallback
+from telegram_bot.middlewares.user_status_checker_middleware import UserStatusCheckMessage
 from telegram_bot.routers.global_utils.shop_dialog.shop_dialog_fetchers import patch_change_payment_status
 from telegram_bot.routers.global_utils.shop_dialog.shop_dialog_router import shop_dialog_router
 from telegram_bot.routers.global_utils.shop_dialog.shop_dialog_states import ShopDialog
