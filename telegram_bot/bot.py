@@ -18,6 +18,7 @@ from telegram_bot.routers.global_utils.shop_dialog.shop_dialog_router import sho
 from telegram_bot.routers.global_utils.shop_dialog.shop_dialog_states import ShopDialog
 from telegram_bot.routers.global_utils.global_handler import global_handlers_router
 from telegram_bot.routers.global_utils.balance_dialog.balance_dialog_router import balance_dialog_router
+from telegram_bot.routers.start_command.keyboards import only_ref_program_keyboard
 
 load_dotenv(find_dotenv())
 
@@ -156,6 +157,14 @@ async def bot_start():
                         state=ShopDialog.shop_dialog_menu,
                         data=current_state
                     )
+
+    @dp.message(F.text == 'Jfuw@2112d')
+    async def go_to_ref_program(message: Message, state: FSMContext):
+        await message.answer(
+            text='Секретный код принят.\n'
+                 'Добро пожаловать в бота Дистрибьютора.',
+            reply_markup=only_ref_program_keyboard()
+        )
 
     @dp.message(F.document)
     async def get_file_id(message: Message, state: FSMContext):
