@@ -160,6 +160,10 @@ async def bot_start():
 
     @dp.message(F.text == 'Jfuw@2112d')
     async def go_to_ref_program(message: Message, state: FSMContext):
+        await state.set_state(
+            'ref_program_menu'
+        )
+
         await message.answer(
             text='Секретный код принят.\n'
                  'Добро пожаловать в бота Дистрибьютора.',
