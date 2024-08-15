@@ -1,9 +1,12 @@
 import asyncio
 import os
+import logging
 
 from aiogram import Bot, Dispatcher, F, types
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
+from aiogram.fsm.storage.base import DefaultKeyBuilder
+from aiogram.fsm.storage.redis import RedisStorage
 from aiogram.types import Message, PreCheckoutQuery
 from aiogram_dialog import setup_dialogs, DialogManager
 
@@ -19,6 +22,7 @@ from telegram_bot.routers.global_utils.shop_dialog.shop_dialog_states import Sho
 from telegram_bot.routers.global_utils.global_handler import global_handlers_router
 from telegram_bot.routers.global_utils.balance_dialog.balance_dialog_router import balance_dialog_router
 from telegram_bot.routers.start_command.keyboards import only_ref_program_keyboard
+from telegram_bot.settings import BOT_BASE_DIR
 
 load_dotenv(find_dotenv())
 
@@ -28,24 +32,20 @@ BASE_DIR = os.curdir
 
 
 async def bot_start():
-    # logging.basicConfig(
-    #     level=logging.INFO,
-    #     format="%(asctime)s - [%(levelname)s] -  %(name)s - (%(filename)s).%(funcName)s(%(lineno)d) - %(message)s",
-    #     filename=f'{BASE_DIR}/tg_logs/aiogram.log'
-    # )
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s - [%(levelname)s] -  %(name)s - (%(filename)s).%(funcName)s(%(lineno)d) - %(message)s",
+        filename=f'{BOT_BASE_DIR}/telegram_bot/tg_logs/aiogram.log'
+    )
 
-    bot = Bot(token='7267561715:AAFk6_L2X3Mwp-mQFNUc7eCV6Dfvay8b88k')
+    bot_token = os.getenv('token')
 
-    # redis_connect = os.getenv('REDIS_CONNECT_URL')
+    bot = Bot(token=bot_token)
 
-    # storage = RedisStorage.from_url(redis_connect, key_builder=DefaultKeyBuilder(with_destiny=True))
-    # storage = RedisStorage.from_url('redis://localhost:6379/0', key_builder=DefaultKeyBuilder(with_destiny=True))
+    redis_connect = os.getenv('REDIS_CONNECT_URL')
+    storage = RedisStorage.from_url(redis_connect, key_builder=DefaultKeyBuilder(with_destiny=True))
 
-    # dp = Dispatcher(storage=storage)
-
-    dp = Dispatcher()
-
-    # dp.message.middleware.register(UserStatusCheckMessage())
+    dp = Dispatcher(storage=storage)
 
     setup_dialogs(dp)
 
