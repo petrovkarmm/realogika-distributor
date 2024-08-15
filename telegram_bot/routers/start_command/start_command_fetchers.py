@@ -1,6 +1,6 @@
 import aiohttp
 
-from telegram_bot.settings import api_url
+from settings import api_url
 
 
 async def patch_user_promocode(promocode_name: str, telegram_user_id: int, sponsored_user_data: dict):

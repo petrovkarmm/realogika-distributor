@@ -9,15 +9,14 @@ from aiogram_dialog.widgets.kbd import Button, ScrollingGroup, Column, Select, B
 from aiogram_dialog.widgets.media import DynamicMedia, StaticMedia
 from aiogram_dialog.widgets.text import Const, Format
 
-from data_for_tests import test_data_list, detail_item_test_data
-from telegram_bot.routers.global_utils.func_utils import uuid_generation
-from telegram_bot.routers.global_utils.keyboards import close_invoice, ref_program_menu
-from telegram_bot.routers.global_utils.shop_dialog.shop_dialog_fetchers import get_all_items_from_shop, \
+from routers.global_utils.func_utils import uuid_generation
+from routers.global_utils.keyboards import close_invoice, ref_program_menu
+from routers.global_utils.shop_dialog.shop_dialog_fetchers import get_all_items_from_shop, \
     get_item_from_shop, post_create_payment
-from telegram_bot.routers.global_utils.shop_dialog.shop_dialog_states import ShopDialog
-from telegram_bot.routers.global_utils.shop_dialog.shop_items_dataclass import ShopItem, SHOP_KEY
-from telegram_bot.routers.global_utils.shop_dialog.utils import validate_image_url
-from telegram_bot.routers.start_command.keyboards import ref_code_keyboard
+from routers.global_utils.shop_dialog.shop_dialog_states import ShopDialog
+from routers.global_utils.shop_dialog.shop_items_dataclass import ShopItem, SHOP_KEY
+from routers.global_utils.shop_dialog.utils import validate_image_url
+from routers.start_command.keyboards import ref_code_keyboard
 
 
 async def close_dialog(callback: CallbackQuery,

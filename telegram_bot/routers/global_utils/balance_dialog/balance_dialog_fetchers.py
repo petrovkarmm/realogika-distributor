@@ -1,6 +1,6 @@
 import aiohttp
 
-from telegram_bot.settings import api_url
+from settings import api_url
 
 
 async def get_all_user_rewards(user_account_id: int):

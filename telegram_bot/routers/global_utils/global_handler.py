@@ -7,13 +7,13 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 from aiogram_dialog import DialogManager
 
-from telegram_bot.routers.global_utils.balance_dialog.balance_dialog_states import BalanceDialog
-from telegram_bot.routers.global_utils.balance_dialog.utils import convert_datetime
-from telegram_bot.routers.global_utils.func_utils import send_ref_link_with_qr
-from telegram_bot.routers.global_utils.global_fetchers import get_my_sponsor_data, get_my_sponsored_users_data, \
+from routers.global_utils.balance_dialog.balance_dialog_states import BalanceDialog
+from routers.global_utils.balance_dialog.utils import convert_datetime
+from routers.global_utils.func_utils import send_ref_link_with_qr
+from routers.global_utils.global_fetchers import get_my_sponsor_data, get_my_sponsored_users_data, \
     get_user_data, get_user_promocode
-from telegram_bot.routers.global_utils.keyboards import ref_program_menu
-from telegram_bot.routers.global_utils.shop_dialog.shop_dialog_states import ShopDialog
+from routers.global_utils.keyboards import ref_program_menu
+from routers.global_utils.shop_dialog.shop_dialog_states import ShopDialog
 
 global_handlers_router = Router()
 

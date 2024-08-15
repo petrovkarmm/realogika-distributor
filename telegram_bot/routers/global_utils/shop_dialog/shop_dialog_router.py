@@ -1,6 +1,6 @@
 from aiogram import Router
 
-from telegram_bot.routers.global_utils.shop_dialog.shop_dialog import shop_dialog
+from routers.global_utils.shop_dialog.shop_dialog import shop_dialog
 
 shop_dialog_router = Router()
 

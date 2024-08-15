@@ -3,8 +3,8 @@ from aiogram.filters import StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
-from telegram_bot.routers.ref_code_no_roles.keyboards import ref_program_menu_keyboards
-from telegram_bot.routers.start_command.keyboards import ref_code_no_roles_keyboard
+from routers.ref_code_no_roles.keyboards import ref_program_menu_keyboards
+from routers.start_command.keyboards import ref_code_no_roles_keyboard
 
 ref_code_no_roles_router = Router()
 

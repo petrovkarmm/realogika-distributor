@@ -4,7 +4,7 @@ import qrcode
 from aiofiles import os
 from aiogram.types import FSInputFile, Message
 
-from telegram_bot.settings import BOT_BASE_DIR
+from settings import BOT_BASE_DIR
 
 
 async def uuid_generation():

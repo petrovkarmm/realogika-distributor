@@ -4,11 +4,11 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 from aiogram_dialog import DialogManager
 
-from telegram_bot.routers.global_utils.func_utils import split_name_id_promocode
-from telegram_bot.routers.global_utils.shop_dialog.shop_dialog_states import ShopDialog
-from telegram_bot.routers.start_command.keyboards import ref_code_no_roles_keyboard, ref_code_keyboard, \
+from routers.global_utils.func_utils import split_name_id_promocode
+from routers.global_utils.shop_dialog.shop_dialog_states import ShopDialog
+from routers.start_command.keyboards import ref_code_no_roles_keyboard, ref_code_keyboard, \
     only_ref_program_keyboard
-from telegram_bot.routers.start_command.start_command_fetchers import patch_user_promocode, get_shop_item_id, \
+from routers.start_command.start_command_fetchers import patch_user_promocode, get_shop_item_id, \
     get_sponsor_user_data
 
 start_command_router = Router()

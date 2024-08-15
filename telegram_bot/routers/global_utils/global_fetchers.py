@@ -1,6 +1,6 @@
 import aiohttp
 
-from telegram_bot.settings import api_url
+from settings import api_url
 
 
 async def get_my_sponsor_data(user_account_id: int):

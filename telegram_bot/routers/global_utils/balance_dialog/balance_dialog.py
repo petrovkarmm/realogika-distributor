@@ -8,15 +8,15 @@ from aiogram_dialog import Dialog, Window, DialogManager
 from aiogram_dialog.widgets.kbd import Button, ScrollingGroup, Column, Select, Back, SwitchTo
 from aiogram_dialog.widgets.text import Const, Format
 
-from telegram_bot.routers.global_utils.balance_dialog.balance_dataclass import RewardMovement, REWARD_KEY
-from telegram_bot.routers.global_utils.balance_dialog.balance_dialog_fetchers import get_all_user_rewards, \
+from routers.global_utils.balance_dialog.balance_dataclass import RewardMovement, REWARD_KEY
+from routers.global_utils.balance_dialog.balance_dialog_fetchers import get_all_user_rewards, \
     get_user_reward
-from telegram_bot.routers.global_utils.balance_dialog.balance_dialog_states import BalanceDialog
+from routers.global_utils.balance_dialog.balance_dialog_states import BalanceDialog
 from data_for_tests import test_user_balance_movement_data, \
     test_full_balance_movement_info
-from telegram_bot.routers.global_utils.balance_dialog.utils import convert_datetime
-from telegram_bot.routers.global_utils.keyboards import ref_program_menu
-from telegram_bot.routers.start_command.keyboards import ref_code_keyboard
+from routers.global_utils.balance_dialog.utils import convert_datetime
+from routers.global_utils.keyboards import ref_program_menu
+from routers.start_command.keyboards import ref_code_keyboard
 
 
 async def tech_work(

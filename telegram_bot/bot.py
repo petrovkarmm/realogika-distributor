@@ -15,14 +15,13 @@ from routers.start_command.start_command_router import start_command_router
 
 from dotenv import load_dotenv, find_dotenv
 
-from telegram_bot.middlewares.user_status_checker_middleware import UserStatusCheckMessage
-from telegram_bot.routers.global_utils.shop_dialog.shop_dialog_fetchers import patch_change_payment_status
-from telegram_bot.routers.global_utils.shop_dialog.shop_dialog_router import shop_dialog_router
-from telegram_bot.routers.global_utils.shop_dialog.shop_dialog_states import ShopDialog
-from telegram_bot.routers.global_utils.global_handler import global_handlers_router
-from telegram_bot.routers.global_utils.balance_dialog.balance_dialog_router import balance_dialog_router
-from telegram_bot.routers.start_command.keyboards import only_ref_program_keyboard
-from telegram_bot.settings import BOT_BASE_DIR
+from routers.global_utils.shop_dialog.shop_dialog_fetchers import patch_change_payment_status
+from routers.global_utils.shop_dialog.shop_dialog_router import shop_dialog_router
+from routers.global_utils.shop_dialog.shop_dialog_states import ShopDialog
+from routers.global_utils.global_handler import global_handlers_router
+from routers.global_utils.balance_dialog.balance_dialog_router import balance_dialog_router
+from routers.start_command.keyboards import only_ref_program_keyboard
+from settings import BOT_BASE_DIR
 
 load_dotenv(find_dotenv())
 
