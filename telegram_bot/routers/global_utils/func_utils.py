@@ -1,9 +1,8 @@
 import uuid
-
 import qrcode
+
 from aiofiles import os
 from aiogram.types import FSInputFile, Message
-
 from settings import BOT_BASE_DIR
 
 
@@ -17,12 +16,12 @@ async def split_name_id_promocode(input_string):
 
 
 async def send_ref_link_with_qr(ref_link: str,
-                           message: Message):
+                                message: Message):
     img = qrcode.make(ref_link)
 
     file_uuid_name = uuid.uuid4()
 
-    qr_path = f"{BOT_BASE_DIR}\\telegram_bot\\routers\\global_utils\\qr_codes\\{file_uuid_name}.png"
+    qr_path = f"{BOT_BASE_DIR}\\routers\\global_utils\\qr_codes\\{file_uuid_name}.png"
 
     img.save(qr_path)
 

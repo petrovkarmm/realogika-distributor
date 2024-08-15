@@ -34,7 +34,7 @@ async def bot_start():
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s - [%(levelname)s] -  %(name)s - (%(filename)s).%(funcName)s(%(lineno)d) - %(message)s",
-        filename=f'{BOT_BASE_DIR}/telegram_bot/tg_logs/aiogram.log'
+        filename=f'{BOT_BASE_DIR}/tg_logs/aiogram.log'
     )
 
     bot_token = os.getenv('token')
