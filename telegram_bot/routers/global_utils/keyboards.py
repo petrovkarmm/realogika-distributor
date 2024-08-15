@@ -18,7 +18,7 @@ def ref_program_menu():
     keyboard_builder.button(text='Мои рефералы')
     keyboard_builder.button(text='Баланс')
     keyboard_builder.button(text='Моя реф. ссылка')
-    keyboard_builder.button(text='Магазин')
+    # keyboard_builder.button(text='Магазин')
 
     keyboard_builder.adjust(2)
 
