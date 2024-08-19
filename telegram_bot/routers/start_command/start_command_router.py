@@ -11,7 +11,9 @@ from routers.start_command.keyboards import ref_code_no_roles_keyboard, ref_code
 from routers.start_command.start_command_fetchers import patch_user_promocode, get_shop_item_id, \
     get_sponsor_user_data
 
-from routers.global_utils.global_fetchers import get_user_data
+from routers.global_utils.global_fetchers import get_user_data, get_my_sponsor_data
+
+from routers.global_utils.keyboards import ref_program_menu
 
 start_command_router = Router()
 
@@ -110,7 +112,7 @@ async def answer_on_spam_from_none(message: Message, state: FSMContext):
             text=('Произошла техничская ошибка.\n'
                   'Пожалуйста, повторите действие.'
                   ),
-            reply_markup=only_ref_program_keyboard()
+            reply_markup=ref_program_menu()
         )
     else:
 
