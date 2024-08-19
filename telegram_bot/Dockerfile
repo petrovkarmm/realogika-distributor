@@ -8,6 +8,7 @@ WORKDIR /app
 COPY . .
 
 # Устанавливаем зависимости из requirements.txt
+RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Запускаем bot.py при старте контейнера
