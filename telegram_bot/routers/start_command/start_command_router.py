@@ -14,6 +14,7 @@ from routers.start_command.start_command_fetchers import patch_user_promocode, g
 from routers.global_utils.global_fetchers import get_user_data, get_my_sponsor_data
 
 from routers.global_utils.keyboards import ref_program_menu
+from routers.start_command.start_command_filter import MainAdminsFilter
 
 start_command_router = Router()
 
@@ -95,6 +96,16 @@ async def getting_start_with_new_users(message: Message, state: FSMContext, comm
             text='Добро пожаловать в бота дистрибьютора Релогики!\n'
                  'Чтобы воспользоваться ботом необходимо использовать ссылку приглашение.',
         )
+
+
+@start_command_router.message(MainAdminsFilter(), StateFilter(None), F.text.lower() == 'вход')
+async def admins_entering_handler(message: Message, state: FSMContext):
+    await state.set_state(
+        'ref_program_menu'
+    )
+    await message.answer(
+        text='Вы были авторизованы в качестве главного администратора.'
+    )
 
 
 @start_command_router.message(StateFilter(None), F.text)
