@@ -14,7 +14,8 @@ from routers.start_command.start_command_fetchers import patch_user_promocode, g
 from routers.global_utils.global_fetchers import get_user_data, get_my_sponsor_data
 
 from routers.global_utils.keyboards import ref_program_menu
-from routers.start_command.start_command_filter import MainAdminsFilter
+
+from routers.start_command.start_command_fetchers import get_user_partner_start
 
 start_command_router = Router()
 
@@ -92,30 +93,14 @@ async def getting_start_with_new_users(message: Message, state: FSMContext, comm
                      'Пожалуйста, повторите позже.'
             )
     else:
-        await message.answer(
-            text='Добро пожаловать в бота дистрибьютора Релогики!\n'
-                 'Чтобы воспользоваться ботом необходимо использовать ссылку приглашение.',
-        )
-
-
-@start_command_router.message(MainAdminsFilter(), StateFilter(None), F.text.lower() == 'вход')
-async def admins_entering_handler(message: Message, state: FSMContext):
-    await state.set_state(
-        'ref_program_menu'
-    )
-    await message.answer(
-        text='Вы были авторизованы в качестве главного администратора.'
-    )
+        await answer_on_spam_from_none(message, state)
 
 
 @start_command_router.message(StateFilter(None), F.text)
 async def answer_on_spam_from_none(message: Message, state: FSMContext):
-    user_account_data = await get_user_data(message.from_user.id)
-    user_account_id = user_account_data['account']['id']
+    user_permission_data = await get_user_partner_start(message.from_user.id)
 
-    sponsor_data = await get_my_sponsor_data(user_account_id)
-
-    if sponsor_data:
+    if user_permission_data:
         await state.set_state(
             'ref_program_menu'
         )
@@ -126,7 +111,6 @@ async def answer_on_spam_from_none(message: Message, state: FSMContext):
             reply_markup=ref_program_menu()
         )
     else:
-
         await message.answer(
             text='Добро пожаловать в бота дистрибьютора Релогики!\n'
                  'Чтобы воспользоваться ботом необходимо использовать ссылку приглашение.',

@@ -26,3 +26,11 @@ async def get_sponsor_user_data(account_id: int):
         url = f'{api_url}/user_accounts/{account_id}'
         async with session.get(url=url, headers=headers) as response:
             return await response.json()
+
+
+async def get_user_partner_start(telegram_id: int):
+    async with aiohttp.ClientSession() as session:
+        url = f'{api_url}/partners/user/start/?external_id={telegram_id}'
+        async with session.get(url=url, headers=headers) as response:
+            return await response.json()
+
