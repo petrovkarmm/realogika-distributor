@@ -1,3 +1,5 @@
+from pprint import pprint
+
 from aiogram import Router, F
 from aiogram.filters import Command, StateFilter, CommandObject
 from aiogram.fsm.context import FSMContext
@@ -40,6 +42,10 @@ async def getting_start_with_new_users(message: Message, state: FSMContext, comm
         status_code, promocode_patch_response = await patch_user_promocode(promocode_name=command_args,
                                                                            telegram_user_id=message.from_user.id,
                                                                            sponsored_user_data=sponsored_user_data)
+
+        pprint(status_code)
+        print('-----------')
+        pprint(promocode_patch_response)
 
         if status_code == 200:
             promocode_data = promocode_patch_response['promocodes'][0]
