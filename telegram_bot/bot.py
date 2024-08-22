@@ -37,7 +37,8 @@ async def bot_start():
     #     filename=f'{BOT_BASE_DIR}/tg_logs/aiogram.log'
     # )
 
-    bot_token = os.getenv('token')
+    # bot_token = os.getenv('token')
+    bot_token = '6663031505:AAHf_DCwgkjRZLvGPtX_cwppY3E0qDdKEQw'
 
     bot = Bot(token=bot_token)
 
