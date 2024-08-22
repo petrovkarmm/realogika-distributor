@@ -74,6 +74,7 @@ async def bot_start():
         :param state:
         :return:
         """
+        # TODO добавить отправку сообщения о покупке верхушке.
         state_data = await state.get_data()
         try:
             invoice_object = state_data['invoice_object']
@@ -159,6 +160,12 @@ async def bot_start():
                         data=current_state
                     )
 
+    @dp.message(F.text == 'test_state')
+    async def none_state_handler(message: Message, state: FSMContext):
+        await state.set_state(
+            None
+        )
+
     @dp.message(F.document)
     async def get_file_id(message: Message, state: FSMContext):
         await message.answer(
@@ -181,16 +188,6 @@ async def bot_start():
     async def send_user_id(message: Message, state: FSMContext):
         await message.answer(
             text=str(message.from_user.id)
-        )
-
-    @dp.message(F.text == 'ping')
-    async def test_handler_on_ping(message: Message, state: FSMContext):
-        await message.answer(
-            text=f'{message.from_user.full_name}'
-        )
-
-        await message.answer(
-            text='PONG'
         )
 
     await bot.delete_webhook(
