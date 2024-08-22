@@ -105,8 +105,7 @@ async def answer_on_spam_from_none(message: Message, state: FSMContext):
             'ref_program_menu'
         )
         await message.answer(
-            text=('Произошла техничская ошибка.\n'
-                  'Пожалуйста, повторите действие.'
+            text=('Произвожу вход в систему.'
                   ),
             reply_markup=ref_program_menu()
         )
