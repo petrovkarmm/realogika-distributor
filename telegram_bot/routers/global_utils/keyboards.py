@@ -19,8 +19,9 @@ def ref_program_menu():
     keyboard_builder.button(text='Баланс')
     keyboard_builder.button(text='Моя реф. ссылка')
     # keyboard_builder.button(text='Магазин')
+    keyboard_builder.button(text='В меню')
 
-    keyboard_builder.adjust(2)
+    keyboard_builder.adjust(3)
 
     return keyboard_builder.as_markup(
         resize_keyboard=True,

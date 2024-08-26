@@ -20,7 +20,7 @@ from routers.global_utils.shop_dialog.shop_dialog_router import shop_dialog_rout
 from routers.global_utils.shop_dialog.shop_dialog_states import ShopDialog
 from routers.global_utils.global_handler import global_handlers_router
 from routers.global_utils.balance_dialog.balance_dialog_router import balance_dialog_router
-from routers.start_command.keyboards import only_ref_program_keyboard
+from routers.start_command.keyboards import main_menu_keyboard
 from settings import BOT_BASE_DIR
 
 load_dotenv(find_dotenv())

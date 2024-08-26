@@ -1,7 +1,7 @@
 from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder
 
 
-def only_ref_program_keyboard():
+def main_menu_keyboard():
     keyboard_builder = ReplyKeyboardBuilder()
     keyboard_builder.button(text='Реф. программа')
 

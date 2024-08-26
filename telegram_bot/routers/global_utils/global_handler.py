@@ -15,6 +15,8 @@ from routers.global_utils.global_fetchers import get_my_sponsor_data, get_my_spo
 from routers.global_utils.keyboards import ref_program_menu
 from routers.global_utils.shop_dialog.shop_dialog_states import ShopDialog
 
+from routers.start_command.keyboards import main_menu_keyboard
+
 global_handlers_router = Router()
 
 
@@ -38,6 +40,16 @@ global_handlers_router = Router()
 #         state=ShopDialog.shop_dialog_menu,
 #         data=current_state
 #     )
+
+@global_handlers_router.message(StateFilter('ref_program_menu'), F.text == 'В меню')
+async def ref_program_menu_handler(message: Message, state: FSMContext):
+    await state.set_state(
+        'main_menu'
+    )
+    await message.answer(
+        text='Выберите действие:',
+        reply_markup=main_menu_keyboard()
+    )
 
 
 @global_handlers_router.message(StateFilter('on_invoice_payment'),
@@ -82,7 +94,7 @@ async def cancel_payment(message: Message, state: FSMContext, dialog_manager: Di
         )
 
 
-@global_handlers_router.message(F.text == 'Реф. программа')
+@global_handlers_router.message(StateFilter('main_menu'), F.text == 'Реф. программа')
 async def ref_program_menu_handler(message: Message, state: FSMContext):
     await state.set_state(
         'ref_program_menu'
@@ -93,29 +105,29 @@ async def ref_program_menu_handler(message: Message, state: FSMContext):
 
     sponsor_data = await get_my_sponsor_data(user_account_id)
     if sponsor_data:
-        sponsor_name = sponsor_data[0]['sponsor']['first_name'] or 'отсутствует.'
-        sponsor_last_name = sponsor_data[0]['sponsor']['last_name'] or 'отсутствует.'
-        sponsor_email = sponsor_data[0]['sponsor']['email'] or 'отсутствует.'
+        if sponsor_data[0]['sponsor']:
+            sponsor_name = sponsor_data[0]['sponsor']['first_name'] or 'отсутствует.'
+            sponsor_last_name = sponsor_data[0]['sponsor']['last_name'] or 'отсутствует.'
+            sponsor_email = sponsor_data[0]['sponsor']['email'] or 'отсутствует.'
 
-        promocode_data = user_account_data['promocodes'][0]
-        promocode_data_end_date = promocode_data['end_at']
-        promocode_data_end_date_convert = convert_datetime(promocode_data_end_date)
+            promocode_data = user_account_data['promocodes'][0]
+            promocode_data_end_date = promocode_data['end_at']
+            promocode_data_end_date_convert = convert_datetime(promocode_data_end_date)
 
-        await message.answer(
-            text='Дата окончания промокода:\n\n'
-                 f'{promocode_data_end_date_convert}\n\n'
-                 'Данные вашего спонсора:\n\n'
-                 f'Имя - {sponsor_name}\n'
-                 f'Фамилия - {sponsor_last_name}\n'
-                 f'Email - {sponsor_email}',
-            reply_markup=ref_program_menu()
-        )
-
-    else:
-        await message.answer(
-            text='У вас отсутствует спонсор.',
-            reply_markup=ref_program_menu()
-        ),
+            await message.answer(
+                text='Дата окончания промокода:\n\n'
+                     f'{promocode_data_end_date_convert}\n\n'
+                     'Данные вашего спонсора:\n\n'
+                     f'Имя - {sponsor_name}\n'
+                     f'Фамилия - {sponsor_last_name}\n'
+                     f'Email - {sponsor_email}',
+                reply_markup=ref_program_menu()
+            )
+        else:
+            await message.answer(
+                text='У вас отсутствует спонсор.',
+                reply_markup=ref_program_menu()
+            ),
 
 
 @global_handlers_router.message(StateFilter('ref_program_menu'), F.text == 'Баланс')
@@ -192,4 +204,13 @@ async def answer_on_spam_handler(message: Message, state: FSMContext):
         text='Неизвестная команда.\n\n'
              'Выберите действие:',
         reply_markup=ref_program_menu()
+    )
+
+
+@global_handlers_router.message(StateFilter('main_menu'), F.text)
+async def answer_on_spam_handler_2(message: Message, state: FSMContext):
+    await message.answer(
+        text='Неизвестная команда.\n\n'
+             'Выберите действие:',
+        reply_markup=main_menu_keyboard()
     )

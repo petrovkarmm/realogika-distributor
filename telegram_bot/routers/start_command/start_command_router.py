@@ -9,7 +9,7 @@ from aiogram_dialog import DialogManager
 from routers.global_utils.func_utils import split_name_id_promocode
 from routers.global_utils.shop_dialog.shop_dialog_states import ShopDialog
 from routers.start_command.keyboards import ref_code_no_roles_keyboard, ref_code_keyboard, \
-    only_ref_program_keyboard
+    main_menu_keyboard
 from routers.start_command.start_command_fetchers import patch_user_promocode, get_shop_item_id, \
     get_sponsor_user_data
 
@@ -43,10 +43,6 @@ async def getting_start_with_new_users(message: Message, state: FSMContext, comm
                                                                            telegram_user_id=message.from_user.id,
                                                                            sponsored_user_data=sponsored_user_data)
 
-        pprint(status_code)
-        print('-----------')
-        pprint(promocode_patch_response)
-
         if status_code == 200:
             promocode_data = promocode_patch_response['promocodes'][0]
             sponsor_account_id = promocode_data['account_id']
@@ -75,23 +71,29 @@ async def getting_start_with_new_users(message: Message, state: FSMContext, comm
                 pass
 
             await state.set_state(
-                'ref_program_menu'
+                'main_menu'
             )
             await message.answer(
                 text='Промокод успешно применён!',
-                reply_markup=only_ref_program_keyboard()
+                reply_markup=main_menu_keyboard()
             )
         elif status_code == 404:
             await message.answer(
                 text='Промокод не найден.'
             )
+        elif status_code == 421:
+            await message.answer(
+                text='Вы не можете привязаться к данному спонсору, так как уже находитесь в таблице партнеров.\n'
+                     'Произвожу автоматический вход в систему.'
+            )
         elif status_code == 422:
             await state.set_state(
-                'ref_program_menu'
+                'main_menu'
             )
             await message.answer(
-                text='За вами уже закреплен промокод.',
-                reply_markup=only_ref_program_keyboard()
+                text='За вами уже закреплен промокод.\n'
+                     'Произвожу автоматический вход в систему.',
+                reply_markup=main_menu_keyboard()
             )
         else:
             await message.answer(
@@ -108,15 +110,16 @@ async def answer_on_spam_from_none(message: Message, state: FSMContext):
 
     if user_permission_data:
         await state.set_state(
-            'ref_program_menu'
+            'main_menu'
         )
         await message.answer(
-            text=('Произвожу вход в систему.'
+            text=('Вы уже находитесь в таблице партнеров.\n'
+                  'Произвожу автоматический вход в систему.'
                   ),
-            reply_markup=ref_program_menu()
+            reply_markup=main_menu_keyboard()
         )
     else:
         await message.answer(
-            text='Добро пожаловать в бота дистрибьютора Релогики!\n'
+            text='Добро пожаловать в бота дистрибьютора Реалогики!\n'
                  'Чтобы воспользоваться ботом необходимо использовать ссылку приглашение.',
         )
