@@ -82,9 +82,13 @@ async def getting_start_with_new_users(message: Message, state: FSMContext, comm
                 text='Промокод не найден.'
             )
         elif status_code == 421:
+            await state.set_state(
+                'main_menu'
+            )
             await message.answer(
                 text='Вы не можете привязаться к данному спонсору, так как уже находитесь в таблице партнеров.\n'
-                     'Произвожу автоматический вход в систему.'
+                     'Произвожу автоматический вход в систему.',
+                reply_markup=main_menu_keyboard()
             )
         elif status_code == 422:
             await state.set_state(
