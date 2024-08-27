@@ -10,6 +10,7 @@ from aiogram.fsm.storage.redis import RedisStorage
 from aiogram.types import Message, PreCheckoutQuery
 from aiogram_dialog import setup_dialogs, DialogManager
 
+from routers.global_utils.message_thread.message_thread_router import message_thread_router
 from routers.ref_code_no_roles.ref_code_no_roles_router import ref_code_no_roles_router
 from routers.start_command.start_command_router import start_command_router
 
@@ -50,6 +51,7 @@ async def bot_start():
 
     setup_dialogs(dp)
 
+    dp.include_router(message_thread_router)
     dp.include_router(balance_dialog_router)
     dp.include_router(shop_dialog_router)
 
