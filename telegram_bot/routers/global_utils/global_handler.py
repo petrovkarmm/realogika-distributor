@@ -18,6 +18,8 @@ from routers.global_utils.shop_dialog.shop_dialog_states import ShopDialog
 
 from routers.start_command.keyboards import main_menu_keyboard
 
+from script_tests import draw_tree
+
 global_handlers_router = Router()
 
 
@@ -53,7 +55,59 @@ async def ref_program_menu_handler(message: Message, state: FSMContext):
     )
 
 
-@global_handlers_router.message(F.text == 'message_thread')
+@global_handlers_router.message(StateFilter('ref_program_menu'), F.text == 'Древо')
+async def ref_program_menu_handler(message: Message, state: FSMContext):
+    # Входные данные
+    data = [
+        {
+            "чел": "андрей",
+            "кого он пригласил": [
+                {
+                    "чел": "жора",
+                    "кого он пригласил": [
+                        {
+                            "чел": "Евгений",
+                            "кого он пригласил": []
+                        }
+                    ]
+                },
+                {
+                    "чел": "Я",
+                    "кого он пригласил": [
+                        {
+                            "чел": "Николай",
+                            "кого он пригласил": [
+                                {
+                                    "чел": "Артём",
+                                    "кого он пригласил": [
+                                        {
+                                            'чел': 'Антон',
+                                            'кого он пригласил': []
+                                        },
+                                        {
+                                            'чел': 'Максим',
+                                            'кого он пригласил': []
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+
+    # Обрабатываем данные и сохраняем результат в строку
+    result = ""
+    for root in data:
+        result += draw_tree(root)
+
+    # Выводим результат
+    print(result)
+
+
+@global_handlers_router.message(F.text == 'Очередь')
 async def start_message_thread_dialog(message: Message, state: FSMContext, dialog_manager: DialogManager):
     await dialog_manager.start(
         state=MessageThreadStates.message_thread_menu
