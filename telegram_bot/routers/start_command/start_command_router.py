@@ -27,6 +27,8 @@ async def getting_start_with_new_users(message: Message, state: FSMContext, comm
                                        dialog_manager: DialogManager):
     command_args = command.args
 
+    # TODO сделать проверку роли и запускать таску на очередь сообщений
+
     if command_args:
 
         sponsored_user_data = {

@@ -133,13 +133,6 @@ async def start_message_thread_dialog(message: Message, state: FSMContext, dialo
     )
 
 
-@global_handlers_router.message(F.text == 'Очередь2')
-async def start_message_thread_dialog(message: Message, state: FSMContext, dialog_manager: DialogManager):
-    await dialog_manager.start(
-        state=MessageThreadStates.message_thread_menu_2
-    )
-
-
 @global_handlers_router.message(StateFilter('on_invoice_payment'),
                                 F.text == 'Отменить покупку')
 async def cancel_payment(message: Message, state: FSMContext, dialog_manager: DialogManager):
