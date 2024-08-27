@@ -60,14 +60,21 @@ async def ref_program_menu_handler(message: Message, state: FSMContext):
     # Входные данные
     data = [
         {
-            "чел": "андрей",
+            "чел": None,
             "кого он пригласил": [
                 {
                     "чел": "жора",
                     "кого он пригласил": [
                         {
                             "чел": "Евгений",
-                            "кого он пригласил": []
+                            "кого он пригласил": [
+                                {
+                                    'чел': 'Антон',
+                                    'кого он пригласил': [
+
+                                    ]
+                                }
+                            ]
                         }
                     ]
                 },
@@ -104,7 +111,10 @@ async def ref_program_menu_handler(message: Message, state: FSMContext):
         result += draw_tree(root)
 
     # Выводим результат
-    print(result)
+    await message.answer(
+        text=result,
+        parse_mode='HTML'
+    )
 
 
 @global_handlers_router.message(F.text == 'Очередь')
