@@ -79,7 +79,7 @@ async def paging_getter(dialog_manager: DialogManager, **_kwargs):
 stub_scroll_window = Window(
     Format("Вы на {current_page} странице из {pages}"),
     StaticMedia(path=Format(
-        "C:/Users/Сотрудник/PycharmProjects/realogika-distributor/telegram_bot/routers/global_utils/message_thread/media/{current_page}.png")),
+        "C:/Users/darti/PycharmProjects/realogika-distributor/telegram_bot/routers/global_utils/message_thread/media/{current_page}.png")),
     StubScroll(id=ID_STUB_SCROLL, pages="pages"),
     NumberedPager(scroll=ID_STUB_SCROLL),
     Button(

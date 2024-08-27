@@ -57,7 +57,7 @@ async def ref_program_menu_handler(message: Message, state: FSMContext):
 
 @global_handlers_router.message(StateFilter('ref_program_menu'), F.text == 'Древо')
 async def ref_program_menu_handler(message: Message, state: FSMContext):
-    # Входные данные
+    # Видит только Бычий корень и всех кто под тобой.
     data = [
         {
             "чел": None,
@@ -73,6 +73,10 @@ async def ref_program_menu_handler(message: Message, state: FSMContext):
                                     'кого он пригласил': [
 
                                     ]
+                                },
+                                {
+                                    'чел': 'Брат Антона',
+                                    'кого он пригласил': []
                                 }
                             ]
                         }
@@ -93,7 +97,12 @@ async def ref_program_menu_handler(message: Message, state: FSMContext):
                                         },
                                         {
                                             'чел': 'Максим',
-                                            'кого он пригласил': []
+                                            'кого он пригласил': [
+                                                {
+                                                    'чел': 'Петя',
+                                                    'кого он пригласил': []
+                                                }
+                                            ]
                                         }
                                     ]
                                 }

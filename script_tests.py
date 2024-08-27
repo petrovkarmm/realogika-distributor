@@ -1,7 +1,7 @@
 def draw_tree(node, prefix="", is_last=True):
     name = node["чел"]
     if name is None:
-        name = "<b>КОРЕНЬ</b>"
+        name = "<b>БЫЧИЙ КОРЕНЬ</b>"
     elif name == "Я":
         name = "<b>Я</b>"
     if prefix:
