@@ -13,6 +13,7 @@ from routers.global_utils.func_utils import send_ref_link_with_qr
 from routers.global_utils.global_fetchers import get_my_sponsor_data, get_my_sponsored_users_data, \
     get_user_data, get_user_promocode
 from routers.global_utils.keyboards import ref_program_menu
+from routers.global_utils.message_thread.message_thread_states import MessageThreadStates
 from routers.global_utils.shop_dialog.shop_dialog_states import ShopDialog
 
 from routers.start_command.keyboards import main_menu_keyboard
@@ -49,6 +50,13 @@ async def ref_program_menu_handler(message: Message, state: FSMContext):
     await message.answer(
         text='Выберите действие:',
         reply_markup=main_menu_keyboard()
+    )
+
+
+@global_handlers_router.message(F.text == 'message_thread')
+async def start_message_thread_dialog(message: Message, state: FSMContext, dialog_manager: DialogManager):
+    await dialog_manager.start(
+        state=MessageThreadStates.message_thread_menu
     )
 
 
