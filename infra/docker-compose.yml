@@ -4,17 +4,17 @@ services:
 
   redis:
     image: redis:7-alpine
-    command: redis-server --requirepass "${REDIS_PASSWORD}"
+#    command: redis-server --requirepass "${REDIS_PASSWORD}"
     env_file:
       - ../.env
 
-  bot:
-    build:
-      context: ../telegram_bot
-    env_file:
-      - ../.env
-    restart: always
-    volumes:
-      - ../telegram_bot:/app
-    depends_on:
-      - redis
+#  bot:
+#    build:
+#      context: ../telegram_bot
+#    env_file:
+#      - ../.env
+#    restart: always
+#    volumes:
+#      - ../telegram_bot:/app
+#    depends_on:
+#      - redis

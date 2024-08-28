@@ -32,19 +32,19 @@ BASE_DIR = os.curdir
 
 
 async def bot_start():
-    # logging.basicConfig(
-    #     level=logging.INFO,
-    #     format="%(asctime)s - [%(levelname)s] -  %(name)s - (%(filename)s).%(funcName)s(%(lineno)d) - %(message)s",
-    #     filename=f'{BOT_BASE_DIR}/tg_logs/aiogram.log'
-    # )
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s - [%(levelname)s] -  %(name)s - (%(filename)s).%(funcName)s(%(lineno)d) - %(message)s",
+        filename=f'{BOT_BASE_DIR}/tg_logs/aiogram.log'
+    )
 
     # bot_token = os.getenv('token')
     bot_token = '6663031505:AAHf_DCwgkjRZLvGPtX_cwppY3E0qDdKEQw'
 
     bot = Bot(token=bot_token)
 
-    # redis_connect = os.getenv('REDIS_CONNECT_URL')
-    # storage = RedisStorage.from_url(redis_connect, key_builder=DefaultKeyBuilder(with_destiny=True))
+    redis_connect = os.getenv('REDIS_TEST_CONNECT_URL')
+    storage = RedisStorage.from_url(redis_connect, key_builder=DefaultKeyBuilder(with_destiny=True))
 
     # dp = Dispatcher(storage=storage)
     dp = Dispatcher()

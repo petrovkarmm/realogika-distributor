@@ -27,7 +27,6 @@ async def getting_start_with_new_users(message: Message, state: FSMContext, comm
                                        dialog_manager: DialogManager):
     command_args = command.args
 
-    # TODO сделать проверку роли и запускать таску на очередь сообщений
 
     if command_args:
 
@@ -46,6 +45,8 @@ async def getting_start_with_new_users(message: Message, state: FSMContext, comm
                                                                            sponsored_user_data=sponsored_user_data)
 
         if status_code == 200:
+            # TODO сделать проверку роли и запускать таску на очередь сообщений
+
             promocode_data = promocode_patch_response['promocodes'][0]
             sponsor_account_id = promocode_data['account_id']
             sponsor_user_data = await get_sponsor_user_data(sponsor_account_id)
@@ -112,7 +113,8 @@ async def getting_start_with_new_users(message: Message, state: FSMContext, comm
 
 @start_command_router.message(StateFilter(None), F.text)
 async def answer_on_spam_from_none(message: Message, state: FSMContext):
-    user_permission_data = await get_user_partner_start(message.from_user.id)
+    user_permission_data = await get_user_partner_start(message.
+                                                        from_user.id)
 
     if user_permission_data:
         await state.set_state(
