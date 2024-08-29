@@ -168,6 +168,13 @@ async def bot_start():
             None
         )
 
+    @dp.callback_query(F.callback.startswith('lesson'))
+    async def send_next_video_lesson(message: Message, state: FSMContext):
+        # Гет запрос на получение следующего видео видео.
+        # Отправка видео.
+        # Создание таски с отправкой данные дальше?
+        pass
+
     @dp.message(F.document)
     async def get_file_id(message: Message, state: FSMContext):
         await message.answer(
