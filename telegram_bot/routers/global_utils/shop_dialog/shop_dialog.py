@@ -51,7 +51,7 @@ async def send_invoice_click(
     current_shop_item_price = dialog_manager.dialog_data['price']
     current_shop_item_id = dialog_manager.dialog_data['id']
 
-    # TODO изменить price_for_payload после подключения платежной системы
+    # TODO изменить платежную систему Точка банк
 
     price_for_payload = current_shop_item_price * 100
     price_for_payload = 10000

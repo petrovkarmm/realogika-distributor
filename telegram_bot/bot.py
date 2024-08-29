@@ -162,6 +162,11 @@ async def bot_start():
                         data=current_state
                     )
 
+    @dp.message(F.text == 'test_payment')
+    async def test_payment(message: Message, state: FSMContext):
+        user_id = message.from_user.id
+        random_price = 1000
+
     @dp.message(F.text == 'test_state')
     async def none_state_handler(message: Message, state: FSMContext):
         await state.set_state(
