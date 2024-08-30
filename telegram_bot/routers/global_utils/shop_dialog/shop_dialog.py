@@ -5,7 +5,7 @@ from aiogram import F, Bot
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, LabeledPrice, Chat
 from aiogram_dialog import Dialog, Window, DialogManager
-from aiogram_dialog.widgets.kbd import Button, ScrollingGroup, Column, Select, Back, Row, SwitchTo
+from aiogram_dialog.widgets.kbd import Button, ScrollingGroup, Column, Select, Back, Row, SwitchTo, WebApp
 from aiogram_dialog.widgets.media import DynamicMedia, StaticMedia
 from aiogram_dialog.widgets.text import Const, Format
 
@@ -15,7 +15,7 @@ from routers.global_utils.shop_dialog.shop_dialog_fetchers import get_all_items_
     get_item_from_shop, post_create_payment
 from routers.global_utils.shop_dialog.shop_dialog_states import ShopDialog
 from routers.global_utils.shop_dialog.shop_items_dataclass import ShopItem, SHOP_KEY
-from routers.global_utils.shop_dialog.utils import validate_image_url
+from routers.global_utils.shop_dialog.utils import validate_image_url, form_invoice_data, get_payment_link
 from routers.start_command.keyboards import ref_code_keyboard
 
 
@@ -44,29 +44,8 @@ async def send_invoice_click(
     bot_object: Bot
     state_object: FSMContext
 
-    current_chat_id = callback_query.message.chat.id
 
-    current_shop_item_name = dialog_manager.dialog_data['title']
-    current_shop_item_description = dialog_manager.dialog_data['description']
-    current_shop_item_price = dialog_manager.dialog_data['price']
-    current_shop_item_id = dialog_manager.dialog_data['id']
 
-    # TODO изменить платежную систему Точка банк
-
-    price_for_payload = current_shop_item_price * 100
-    price_for_payload = 10000
-
-    prices = [
-        LabeledPrice(label="Цена", amount=price_for_payload),
-    ]
-
-    provider_token = '381764678:TEST:92362'
-    currency = 'RUB'
-    payload = await uuid_generation()
-
-    "1111 1111 1111 1026, 12/22, CVC 000."
-
-    # https://yookassa.ru/docs/support/payments/onboarding/integration/cms-module/telegram
 
     await callback_query.message.answer(
         text='*Оплатите покупку нажав кнопку ниже.\n'
@@ -80,15 +59,6 @@ async def send_invoice_click(
     await state_object.set_state(
         'on_invoice_payment'
     )
-
-    payment_data = {
-        "payload": payload,
-        "user_tg_id": current_chat_id,
-        "offer_id": current_shop_item_id,
-        "amount": current_shop_item_price
-    }
-
-    await post_create_payment(payment_data)
 
     invoice_object = await bot_object.send_invoice(
         chat_id=current_chat_id,
@@ -108,10 +78,39 @@ async def send_invoice_click(
 
 
 async def go_to_item_buy_accepting(
-        cq: CallbackQuery,
+        callback_query: CallbackQuery,
         button: Button,
         dialog_manager: DialogManager
 ):
+    payload = await uuid_generation()
+    current_chat_id = callback_query.message.chat.id
+
+    current_shop_item_name = dialog_manager.dialog_data['title']
+    current_shop_item_description = dialog_manager.dialog_data['description']
+    current_shop_item_id = dialog_manager.dialog_data['id']
+    current_shop_item_price = dialog_manager.dialog_data['price']
+
+    payment_data = {
+        "payload": payload,
+        "user_tg_id": current_chat_id,
+        "offer_id": current_shop_item_id,
+        "amount": current_shop_item_price
+    }
+
+    await post_create_payment(payment_data)
+
+    payload_data = {
+        'amount': current_shop_item_price,
+        'name': current_shop_item_name,
+        'description': current_shop_item_description
+    }
+
+    invoice_data = await form_invoice_data(
+        payload_data
+    )
+
+    await get_payment_link(invoice_data)
+
     await dialog_manager.switch_to(
         ShopDialog.shop_item_buy_accepting
     )
@@ -287,7 +286,7 @@ shop_item_detail_window = Window(
 
 shop_item_buy_accepting_window = Window(
     Format(
-        "Пожалуйста, подтвердите покупку.\n\n"
+        "Перейдите к оплате:\n\n"
         "{dialog_data[title]}\n"
         "Цена: {dialog_data[price]} рублей",
         when=F['dialog_data']['price'] > 0
@@ -298,8 +297,9 @@ shop_item_buy_accepting_window = Window(
         "Цена: Бесплатно",
         when=F['dialog_data']['price'] == 0
     ),
-    Button(
-        text=Const("Подтверждаю"), id='buy_item', on_click=send_invoice_click
+    WebApp(
+        Const('Оплатить'),
+        Format("{url_from_getter}"),
     ),
     Row(
         SwitchTo(
