@@ -28,10 +28,8 @@ def form_invoice_data(customer_code: int, request_data: dict):
             "customerCode": customer_code,
             "amount": f"{int(float(request_data.get('amount', 0)))}.00",
             "purpose": (
-                               (f"Е-мейл: {request_data.get('email')}" if request_data.get('email') else "") +
-                               (f"; ФИО: {request_data.get('name')}" if request_data.get('name') else "") +
-                               (f"; Компания: {request_data.get('company')}" if request_data.get('company') else "") +
-                               (f"; {request_data.get('product')}" if request_data.get('product') else "")
+                            "test1\n"
+                            "test2"
                        )[:140],
             "paymentMode": [
                 "sbp",
@@ -64,7 +62,8 @@ def main():
         'Authorization': f'Bearer {jwt}',
         'Content-Type': 'application/json'
     }
-
+    pprint(json.dumps(data))
+    pprint(headers)
     response = requests.post(url, headers=headers, data=json.dumps(data))
 
     # Обработка ответа
