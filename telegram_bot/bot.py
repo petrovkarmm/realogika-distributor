@@ -31,6 +31,16 @@ BASE_DIR = os.curdir
 DEBUG = True
 
 
+async def task(message: Message, state: FSMContext):
+    await message.answer(
+        text='Привет 1'
+    )
+    await asyncio.sleep(20)
+    await message.answer(
+        text='Привет 2'
+    )
+
+
 async def bot_start():
     # logging.basicConfig(
     #     level=logging.INFO,

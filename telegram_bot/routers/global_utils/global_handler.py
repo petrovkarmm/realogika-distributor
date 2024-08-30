@@ -22,26 +22,26 @@ from script_tests import draw_tree
 global_handlers_router = Router()
 
 
-# @global_handlers_router.message(StateFilter('ref_program_menu'), F.text == 'Магазин')
-# async def global_shop_handler(message: Message, state: FSMContext, dialog_manager: DialogManager):
-#     """
-#     Запуск диалогового окна магазина с эквайрингом на оплату внутри.
-#     :param dialog_manager:
-#     :param message:
-#     :param state:
-#     :return:
-#     """
-#     current_state = await state.get_state()
-#
-#     await message.answer(
-#         text='Добро пожаловать в магазин.',
-#         reply_markup=types.ReplyKeyboardRemove()
-#     )
-#
-#     await dialog_manager.start(
-#         state=ShopDialog.shop_dialog_menu,
-#         data=current_state
-#     )
+@global_handlers_router.message(StateFilter('ref_program_menu'), F.text == 'Магазин')
+async def global_shop_handler(message: Message, state: FSMContext, dialog_manager: DialogManager):
+    """
+    Запуск диалогового окна магазина с эквайрингом на оплату внутри.
+    :param dialog_manager:
+    :param message:
+    :param state:
+    :return:
+    """
+    current_state = await state.get_state()
+
+    await message.answer(
+        text='Добро пожаловать в магазин.',
+        reply_markup=types.ReplyKeyboardRemove()
+    )
+
+    await dialog_manager.start(
+        state=ShopDialog.shop_dialog_menu,
+        data=current_state
+    )
 
 @global_handlers_router.message(StateFilter('ref_program_menu'), F.text == 'В меню')
 async def ref_program_menu_handler(message: Message, state: FSMContext):
