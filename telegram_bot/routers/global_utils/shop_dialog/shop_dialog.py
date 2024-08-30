@@ -12,10 +12,10 @@ from aiogram_dialog.widgets.text import Const, Format
 from routers.global_utils.func_utils import uuid_generation
 from routers.global_utils.keyboards import close_invoice, ref_program_menu
 from routers.global_utils.shop_dialog.shop_dialog_fetchers import get_all_items_from_shop, \
-    get_item_from_shop, post_create_payment
+    get_item_from_shop, post_create_payment, post_invoice_to_dot_bank
 from routers.global_utils.shop_dialog.shop_dialog_states import ShopDialog
 from routers.global_utils.shop_dialog.shop_items_dataclass import ShopItem, SHOP_KEY
-from routers.global_utils.shop_dialog.utils import validate_image_url, form_invoice_data, get_payment_link
+from routers.global_utils.shop_dialog.utils import validate_image_url, form_invoice_data
 from routers.start_command.keyboards import ref_code_keyboard
 
 
@@ -33,48 +33,13 @@ def shop_item_id_getter(shop_item: ShopItem) -> int:
     return shop_item.id
 
 
-async def send_invoice_click(
-        callback_query: CallbackQuery,
-        button: Button,
-        dialog_manager: DialogManager
-):
-    dialog_middleware_object = dialog_manager.middleware_data
-    bot_object = dialog_middleware_object['bot']
-    state_object = dialog_middleware_object['state']
-    bot_object: Bot
-    state_object: FSMContext
-
-
-
-
-    await callback_query.message.answer(
-        text='*Оплатите покупку нажав кнопку ниже.\n'
-             'Для отмены покупки нажмите кнопку под чатом.*',
-        reply_markup=close_invoice(),
-        parse_mode='Markdown'
-    )
-
-    await dialog_manager.done()
-
-    await state_object.set_state(
-        'on_invoice_payment'
-    )
-
-    invoice_object = await bot_object.send_invoice(
-        chat_id=current_chat_id,
-        title=current_shop_item_name,
-        description=current_shop_item_description,
-        currency=currency,
-        provider_token=provider_token,
-        payload=payload,
-        prices=prices
-    )
-
-    await state_object.update_data(
-        invoice_object=invoice_object,
-        current_shop_item_id=current_shop_item_id,
-        current_payload=payload
-    )
+async def payment_link_getter(**_kwargs):
+    dialog_manager = _kwargs['dialog_manager']
+    payment_link = dialog_manager.dialog_data['payment_link']
+    pprint(dialog_manager.dialog_data)
+    return {
+        'payment_link': payment_link
+    }
 
 
 async def go_to_item_buy_accepting(
@@ -109,11 +74,19 @@ async def go_to_item_buy_accepting(
         payload_data
     )
 
-    await get_payment_link(invoice_data)
+    payment_bank_response, payment_bank_status_code = await post_invoice_to_dot_bank(invoice_data)
+    if payment_bank_status_code == 200:
+        dialog_manager.dialog_data['payment_link'] = payment_bank_response['Data']['paymentLink']
+        await dialog_manager.switch_to(
+            ShopDialog.shop_item_buy_accepting
+        )
+    else:
+        await callback_query.answer(
+            text='Упс. Произошли технические неполадки во время оплаты.\n'
+                 'Пожалуйста, повторите позже.'
+        )
 
-    await dialog_manager.switch_to(
-        ShopDialog.shop_item_buy_accepting
-    )
+
 
 
 async def get_item_free(
@@ -299,7 +272,7 @@ shop_item_buy_accepting_window = Window(
     ),
     WebApp(
         Const('Оплатить'),
-        Format("{url_from_getter}"),
+        Format("{payment_link}"),
     ),
     Row(
         SwitchTo(
@@ -309,6 +282,7 @@ shop_item_buy_accepting_window = Window(
             text=Const("Выйти"), id="quit_from_shop", on_click=quit_from_shop
         ),
     ),
+    getter=payment_link_getter,
     state=ShopDialog.shop_item_buy_accepting,
 )
 

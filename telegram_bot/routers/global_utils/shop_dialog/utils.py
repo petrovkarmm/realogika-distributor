@@ -32,7 +32,7 @@ async def form_invoice_data(shop_item_data: dict):
             "customerCode": customer_code,
             "amount": f"{int(float(shop_item_data.get('amount', 0)))}.00",
             "purpose": (
-                           f'{shop_item_data.get("name")} - {shop_item_data.get("description")}'
+                           f'{shop_item_data.get("name")}'
                        )[:140],
             "paymentMode": [
                 "sbp",

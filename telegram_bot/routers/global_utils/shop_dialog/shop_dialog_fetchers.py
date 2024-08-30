@@ -33,7 +33,7 @@ async def patch_change_payment_status(payment_id: str):
             return await response.json()
 
 
-async def get_payment_link(invoice_data: dict):
+async def post_invoice_to_dot_bank(invoice_data: dict):
     async with aiohttp.ClientSession() as session:
         url = 'https://enter.tochka.com/uapi/acquiring/v1.0/payments'
         jwt = os.getenv('JWT')
@@ -43,4 +43,6 @@ async def get_payment_link(invoice_data: dict):
         }
 
         async with session.post(url=url, headers=payment_headers, json=invoice_data) as response:
-            return await response.json()
+            payment_response = await response.json()
+            payment_status_code = response.status
+            return payment_response, payment_status_code
