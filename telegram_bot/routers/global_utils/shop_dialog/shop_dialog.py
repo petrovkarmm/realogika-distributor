@@ -87,8 +87,6 @@ async def go_to_item_buy_accepting(
         )
 
 
-
-
 async def get_item_free(
         callback: CallbackQuery,
         button: Button,
